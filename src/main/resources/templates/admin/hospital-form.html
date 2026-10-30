@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Listing Form - Admin Portal</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="container" style="max-width: 800px;">
+    <div th:replace="~{fragments/alert :: alerts}"></div>
+
+    <div style="margin-bottom: 20px;">
+        <a th:href="@{/admin/dashboard}" style="font-size: 0.9rem; color: var(--text-muted);">&larr; Back to Admin Dashboard</a>
+    </div>
+
+    <div class="card" style="padding: 32px;">
+        <div style="margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h1 style="font-size: 1.6rem; font-weight: 800; color: var(--text-main);"
+                    th:text="${hospitalForm.id != null ? 'Edit Demo Hospital' : 'Add New Demo Hospital'}">Hospital Form</h1>
+                <span class="badge badge-demo">Sample Listing</span>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">
+                Fictional medical institution details for Tamil Nadu healthcare directory.
+            </p>
+        </div>
+
+        <form th:action="@{/admin/hospitals/save}" method="post" th:object="${hospitalForm}">
+            <input type="hidden" th:field="*{id}">
+
+            <!-- Hospital Name -->
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label for="name" class="form-label">Hospital Name <span style="color: red;">*</span></label>
+                <input type="text" id="name" class="form-control" th:field="*{name}"
+                       th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
+                       placeholder="e.g. Sample Health Institute">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
+            </div>
+
+            <!-- Hospital Type & State -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px;">
+                <div class="form-group">
+                    <label for="hospitalType" class="form-label">Hospital Type <span style="color: red;">*</span></label>
+                    <select id="hospitalType" class="form-control" th:field="*{hospitalType}"
+                            th:classappend="${#fields.hasErrors('hospitalType')} ? 'is-invalid' : ''">
+                        <option value="Multi-Specialty">Multi-Specialty</option>
+                        <option value="Super Specialty">Super Specialty</option>
+                        <option value="General Hospital">General Hospital</option>
+                        <option value="Specialty Hospital">Specialty Hospital</option>
+                        <option value="Community Clinic">Community Clinic</option>
+                        <option value="Primary Healthcare">Primary Healthcare</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="state" class="form-label">State</label>
+                    <input type="text" id="state" class="form-control" th:field="*{state}" value="Tamil Nadu" readonly
+                           style="background: var(--bg-muted);">
+                </div>
+            </div>
+
+            <!-- District & City -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px;">
+                <div class="form-group">
+                    <label for="districtSelect" class="form-label">Tamil Nadu District <span style="color: red;">*</span></label>
+                    <select id="districtSelect" class="form-control" th:field="*{district}"
+                            th:classappend="${#fields.hasErrors('district')} ? 'is-invalid' : ''">
+                        <option value="">Select District</option>
+                        <option th:each="d : ${districts}" th:value="${d}" th:text="${d}">Chennai</option>
+                        <option value="Chengalpattu">Chengalpattu</option>
+                        <option value="Dindigul">Dindigul</option>
+                        <option value="Erode">Erode</option>
+                        <option value="Kanyakumari">Kanyakumari</option>
+                        <option value="Krishnagiri">Krishnagiri</option>
+                        <option value="Tiruppur">Tiruppur</option>
+                    </select>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('district')}" th:errors="*{district}">District error</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cityInput" class="form-label">City / Town / Area <span style="color: red;">*</span></label>
+                    <input type="text" id="cityInput" class="form-control" th:field="*{city}"
+                           th:classappend="${#fields.hasErrors('city')} ? 'is-invalid' : ''"
+                           placeholder="e.g. Adyar, Gandhipuram">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('city')}" th:errors="*{city}">City error</div>
+                </div>
+            </div>
+
+            <!-- Sample Address -->
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label for="address" class="form-label">Sample Address <span style="color: red;">*</span></label>
+                <input type="text" id="address" class="form-control" th:field="*{address}"
+                       th:classappend="${#fields.hasErrors('address')} ? 'is-invalid' : ''"
+                       placeholder="e.g. Sample Address: No. 24, Main Road, City, Tamil Nadu">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Address error</div>
+            </div>
+
+            <!-- Contact info -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px;">
+                <div class="form-group">
+                    <label for="phone" class="form-label">Sample Phone Notice</label>
+                    <input type="text" id="phone" class="form-control" th:field="*{phone}"
+                           placeholder="044-0000-0000 (Demo)">
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Sample Email</label>
+                    <input type="email" id="email" class="form-control" th:field="*{email}"
+                           placeholder="contact@samplehospital.local">
+                </div>
+            </div>
+
+            <!-- Departments -->
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label for="departments" class="form-label">Departments (Comma separated)</label>
+                <input type="text" id="departments" class="form-control" th:field="*{departments}"
+                       placeholder="e.g. Cardiology, Orthopedics, General Medicine, Pediatrics">
+                <small class="form-text">Used for patient specialty filtering.</small>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label for="description" class="form-label">Brief Description</label>
+                <textarea id="description" class="form-control" rows="3" th:field="*{description}"
+                          placeholder="Short summary of fictional hospital facilities..."></textarea>
+            </div>
+
+            <!-- Active Status -->
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label class="checkbox-label">
+                    <input type="checkbox" th:field="*{active}">
+                    <span>Active and publicly visible in hospital directory</span>
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <a th:href="@{/admin/dashboard}" class="btn btn-outline">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Hospital Record</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>
+

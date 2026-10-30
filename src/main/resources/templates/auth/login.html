@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Tamil Nadu Smart Hospital</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="container">
+    <div class="auth-wrapper">
+        <div class="auth-header">
+            <span class="badge badge-demo" style="margin-bottom: 8px;">Demo Authentication</span>
+            <h1 class="auth-title">Sign In to TN Smart Hospital</h1>
+            <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: 4px;">
+                Access patient booking history, doctor schedules, or state administration.
+            </p>
+        </div>
+
+        <div th:replace="~{fragments/alert :: alerts}"></div>
+        <div th:if="${loginError}" class="alert alert-danger" th:text="${loginError}">Error</div>
+        <div th:if="${logoutMessage}" class="alert alert-success" th:text="${logoutMessage}">Logged out</div>
+
+        <!-- 1-Click Demo Quick Logins Box -->
+        <div class="quick-demo-box">
+            <h4>⚡ 1-Click Quick Demo Login</h4>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+                Click any role to test the platform immediately without typing credentials:
+            </p>
+            <div class="demo-buttons-list">
+                <a th:href="@{/demo-login(role='PATIENT')}" class="btn btn-primary btn-sm" style="justify-content: flex-start;">
+                    <span>👤</span>
+                    <span><strong>Demo Patient</strong> &bull; Selvan Kumar</span>
+                </a>
+                <a th:href="@{/demo-login(role='DOCTOR')}" class="btn btn-secondary btn-sm" style="justify-content: flex-start;">
+                    <span>🩺</span>
+                    <span><strong>Demo Doctor</strong> &bull; Dr. K. Anitha (Cardiologist)</span>
+                </a>
+                <a th:href="@{/demo-login(role='ADMIN')}" class="btn btn-outline btn-sm" style="justify-content: flex-start;">
+                    <span>🛡️</span>
+                    <span><strong>Demo Administrator</strong> &bull; State Health Admin</span>
+                </a>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 20px 0; color: var(--text-subtle);">
+            <div style="flex: 1; height: 1px; background: var(--border-color);"></div>
+            <span style="padding: 0 12px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Or Standard Sign In</span>
+            <div style="flex: 1; height: 1px; background: var(--border-color);"></div>
+        </div>
+
+        <!-- Standard Form Login -->
+        <form th:action="@{/login}" method="post">
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label for="username" class="form-label">Email Address</label>
+                <input type="email" id="username" name="username" class="form-control" required
+                       placeholder="e.g. patient@demo.tn.gov.in">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required
+                       placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 16px;">
+                Sign In
+            </button>
+        </form>
+
+        <div style="text-align: center; font-size: 0.875rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 16px;">
+            Don't have a demo account? <a th:href="@{/register}" style="font-weight: 600;">Register as Patient</a>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>
+

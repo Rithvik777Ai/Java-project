@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Demo Appointment - Tamil Nadu Smart Hospital</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="container">
+    <div th:replace="~{fragments/alert :: alerts}"></div>
+
+    <div style="margin-bottom: 24px;">
+        <a th:href="@{'/doctors/' + ${doctor.id}}" style="font-size: 0.9rem; color: var(--text-muted);">&larr; Back to Doctor's Schedule</a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 32px; align-items: flex-start;">
+        <!-- Left: Booking Form -->
+        <div class="card" style="padding: 32px;">
+            <div style="margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h1 style="font-size: 1.6rem; font-weight: 800; color: var(--text-main);">Confirm Demo Booking</h1>
+                    <span class="badge badge-demo">Demo Booking</span>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">
+                    Please provide your patient details to secure this demonstration appointment slot.
+                </p>
+            </div>
+
+            <form th:action="@{/book}" method="post" th:object="${bookingRequest}">
+                <!-- Hidden Slot ID -->
+                <input type="hidden" th:field="*{slotId}">
+
+                <!-- Patient Name -->
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="patientName" class="form-label">Full Patient Name <span style="color: red;">*</span></label>
+                    <input type="text" id="patientName" class="form-control" th:field="*{patientName}"
+                           th:classappend="${#fields.hasErrors('patientName')} ? 'is-invalid' : ''"
+                           placeholder="e.g. Selvan Kumar">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('patientName')}" th:errors="*{patientName}">
+                        Name error
+                    </div>
+                </div>
+
+                <!-- Patient Phone Number -->
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="patientPhone" class="form-label">10-Digit Mobile Number (India) <span style="color: red;">*</span></label>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="background: var(--bg-muted); border: 1.5px solid var(--border-color); padding: 10px 14px; border-radius: var(--radius-md); font-weight: 600; color: var(--text-muted);">+91</span>
+                        <input type="tel" id="patientPhone" class="form-control" th:field="*{patientPhone}"
+                               th:classappend="${#fields.hasErrors('patientPhone')} ? 'is-invalid' : ''"
+                               placeholder="9876543210" maxlength="10">
+                    </div>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('patientPhone')}" th:errors="*{patientPhone}">
+                        Phone error
+                    </div>
+                    <small class="form-text">Used for sending demo SMS alerts and booking reference retrieval.</small>
+                </div>
+
+                <!-- Patient Email -->
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="patientEmail" class="form-label">Email Address (Optional)</label>
+                    <input type="email" id="patientEmail" class="form-control" th:field="*{patientEmail}"
+                           th:classappend="${#fields.hasErrors('patientEmail')} ? 'is-invalid' : ''"
+                           placeholder="patient@demo.tn.gov.in">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('patientEmail')}" th:errors="*{patientEmail}">
+                        Email error
+                    </div>
+                </div>
+
+                <!-- Visit Reason -->
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label for="reason" class="form-label">Reason for Visit / Symptoms (Optional)</label>
+                    <textarea id="reason" class="form-control" rows="3" th:field="*{reason}"
+                              th:classappend="${#fields.hasErrors('reason')} ? 'is-invalid' : ''"
+                              placeholder="Brief description (e.g. routine checkup, follow-up, consultation)"></textarea>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('reason')}" th:errors="*{reason}">
+                        Reason error
+                    </div>
+                    <small class="form-text">Please do not enter confidential medical history or personal identification numbers.</small>
+                </div>
+
+                <!-- Mandatory Demo Acknowledgment Checkbox -->
+                <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: var(--radius-md); padding: 14px; margin-bottom: 24px;">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="confirmDemoNotice" required checked>
+                        <span>
+                            I understand that this is a <strong>demo prototype platform</strong>. This appointment booking is for software evaluation only and does not reserve real hospital time.
+                        </span>
+                    </label>
+                </div>
+
+                <div style="display: flex; gap: 12px; align-items: center; justify-content: flex-end;">
+                    <a th:href="@{'/doctors/' + ${doctor.id}}" class="btn btn-outline">Cancel</a>
+                    <button type="submit" class="btn btn-primary" style="padding: 12px 28px;">
+                        Confirm Demo Appointment &rarr;
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right: Appointment Summary Sidebar -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="card" style="padding: 24px; border-top: 4px solid var(--primary);">
+                <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 16px;">
+                    Appointment Details
+                </h3>
+
+                <div style="display: flex; flex-direction: column; gap: 14px; font-size: 0.9rem;">
+                    <div>
+                        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Doctor</div>
+                        <div style="font-size: 1.05rem; font-weight: 700; color: var(--text-main);" th:text="${doctor.name}">Dr. K. Anitha</div>
+                        <div style="color: var(--primary); font-weight: 600;" th:text="${doctor.specialty}">Cardiology</div>
+                    </div>
+
+                    <div style="border-top: 1px solid var(--border-color); padding-top: 12px;">
+                        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Hospital</div>
+                        <div style="font-weight: 700; color: var(--text-main);" th:text="${hospital.name}">Demo City General Hospital</div>
+                        <div style="color: var(--text-muted); font-size: 0.85rem;" th:text="${hospital.city} + ', ' + ${hospital.district} + ', Tamil Nadu'">Chennai</div>
+                    </div>
+
+                    <div style="border-top: 1px solid var(--border-color); padding-top: 12px;">
+                        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Selected Date &amp; Time</div>
+                        <div style="font-weight: 700; color: var(--primary); font-size: 1rem;" th:text="${#temporals.format(slot.date, 'EEEE, dd MMMM yyyy')}">Monday, 31 Oct 2026</div>
+                        <div style="font-weight: 700; color: var(--text-main); font-size: 1.1rem; margin-top: 2px;" th:text="${slot.getFormattedTime()}">09:00 AM - 09:30 AM</div>
+                    </div>
+
+                    <div style="border-top: 1px solid var(--border-color); padding-top: 12px;">
+                        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">OPD Consultation Fee (Demo)</div>
+                        <div style="font-weight: 600; color: var(--accent-green);">₹<span th:text="${#numbers.formatDecimal(doctor.consultationFee, 1, 2)}">500.00</span> (Pay at sample hospital counter)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Safety Box -->
+            <div class="card" style="background: var(--bg-muted); padding: 18px; font-size: 0.85rem; color: var(--text-muted);">
+                <div style="font-weight: 700; color: var(--text-main); margin-bottom: 6px;">🔒 Safe &amp; Privacy-Friendly Demo</div>
+                <p>No credit card, UPI, Aadhaar, or sensitive patient records are collected. You may cancel this booking at any time from your Patient Dashboard.</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>
+

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Profile Form - Admin Portal</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="container" style="max-width: 800px;">
+    <div th:replace="~{fragments/alert :: alerts}"></div>
+
+    <div style="margin-bottom: 20px;">
+        <a th:href="@{/admin/dashboard}" style="font-size: 0.9rem; color: var(--text-muted);">&larr; Back to Admin Dashboard</a>
+    </div>
+
+    <div class="card" style="padding: 32px;">
+        <div style="margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h1 style="font-size: 1.6rem; font-weight: 800; color: var(--text-main);"
+                    th:text="${doctorForm.id != null ? 'Edit Demo Doctor' : 'Add New Demo Doctor'}">Doctor Form</h1>
+                <span class="badge badge-demo">Sample Doctor</span>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">
+                Enter fictional practitioner qualifications, specialty, and hospital affiliation.
+            </p>
+        </div>
+
+        <form th:action="@{/admin/doctors/save}" method="post" th:object="${doctorForm}">
+            <input type="hidden" th:field="*{id}">
+
+            <!-- Doctor Name -->
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label for="name" class="form-label">Doctor Name <span style="color: red;">*</span></label>
+                <input type="text" id="name" class="form-control" th:field="*{name}"
+                       th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
+                       placeholder="e.g. Dr. S. Ramanathan, MD">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
+            </div>
+
+            <!-- Specialty & Qualification -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px;">
+                <div class="form-group">
+                    <label for="specialty" class="form-label">Specialty <span style="color: red;">*</span></label>
+                    <select id="specialty" class="form-control" th:field="*{specialty}"
+                            th:classappend="${#fields.hasErrors('specialty')} ? 'is-invalid' : ''">
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="General Medicine">General Medicine</option>
+                        <option value="Orthopedics">Orthopedics</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="Neurology">Neurology</option>
+                        <option value="Dermatology">Dermatology</option>
+                        <option value="Obstetrics & Gynecology">Obstetrics &amp; Gynecology</option>
+                        <option value="Ophthalmology">Ophthalmology</option>
+                        <option value="ENT">ENT (Ear, Nose, Throat)</option>
+                        <option value="Gastroenterology">Gastroenterology</option>
+                        <option value="Pulmonology">Pulmonology</option>
+                    </select>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('specialty')}" th:errors="*{specialty}">Specialty error</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="qualification" class="form-label">Qualifications</label>
+                    <input type="text" id="qualification" class="form-control" th:field="*{qualification}"
+                           placeholder="e.g. MBBS, MD (General Medicine)">
+                </div>
+            </div>
+
+            <!-- Hospital Affiliation -->
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label for="hospitalId" class="form-label">Hospital Affiliation (Tamil Nadu) <span style="color: red;">*</span></label>
+                <select id="hospitalId" class="form-control" th:field="*{hospitalId}"
+                        th:classappend="${#fields.hasErrors('hospitalId')} ? 'is-invalid' : ''">
+                    <option value="">Select Associated Hospital</option>
+                    <option th:each="h : ${hospitals}" th:value="${h.id}" th:text="${h.name} + ' (' + ${h.city} + ', ' + ${h.district} + ')'">Hospital</option>
+                </select>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('hospitalId')}" th:errors="*{hospitalId}">Hospital error</div>
+            </div>
+
+            <!-- Experience & Languages -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px;">
+                <div class="form-group">
+                    <label for="experienceYears" class="form-label">Experience (Years)</label>
+                    <input type="number" id="experienceYears" class="form-control" th:field="*{experienceYears}" min="0" max="60">
+                </div>
+
+                <div class="form-group">
+                    <label for="languages" class="form-label">Languages Spoken</label>
+                    <input type="text" id="languages" class="form-control" th:field="*{languages}"
+                           placeholder="Tamil, English">
+                </div>
+            </div>
+
+            <!-- Consultation Type & Fee & Room -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                <div class="form-group">
+                    <label for="consultationType" class="form-label">Consultation Mode</label>
+                    <select id="consultationType" class="form-control" th:field="*{consultationType}">
+                        <option value="In-Person Consultation">In-Person Consultation</option>
+                        <option value="Demo Teleconsultation">Demo Teleconsultation</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="consultationFee" class="form-label">Demo Fee (₹)</label>
+                    <input type="number" id="consultationFee" class="form-control" th:field="*{consultationFee}" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="roomNumber" class="form-label">OPD Room</label>
+                    <input type="text" id="roomNumber" class="form-control" th:field="*{roomNumber}"
+                           placeholder="Room 101">
+                </div>
+            </div>
+
+            <!-- Active Status -->
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label class="checkbox-label">
+                    <input type="checkbox" th:field="*{active}">
+                    <span>Active and open for demo bookings</span>
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <a th:href="@{/admin/dashboard}" class="btn btn-outline">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Doctor Profile</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>
+

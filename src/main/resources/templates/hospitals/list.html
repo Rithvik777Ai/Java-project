@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospitals in Tamil Nadu - Tamil Nadu Smart Hospital</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="container">
+    <div th:replace="~{fragments/alert :: alerts}"></div>
+
+    <div class="section-header">
+        <h1 class="section-title">Hospitals in Tamil Nadu</h1>
+        <p class="section-subtitle">Search and filter sample healthcare facilities across all Tamil Nadu districts</p>
+    </div>
+
+    <!-- Filter Card -->
+    <div class="card" style="margin-bottom: 32px; padding: 20px;">
+        <form th:action="@{/hospitals}" method="get" th:object="${searchForm}">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px;">
+                <!-- District -->
+                <div class="form-group">
+                    <label for="district" class="form-label">District</label>
+                    <select id="districtSelect" name="district" class="form-control" th:field="*{district}">
+                        <option value="">All Districts</option>
+                        <option th:each="d : ${districts}" th:value="${d}" th:text="${d}">Chennai</option>
+                    </select>
+                </div>
+
+                <!-- City / Town -->
+                <div class="form-group">
+                    <label for="cityInput" class="form-label">City / Town</label>
+                    <input type="text" id="cityInput" name="city" class="form-control" th:field="*{city}"
+                           placeholder="e.g. Adyar, Peelamedu, KK Nagar">
+                </div>
+
+                <!-- Specialty -->
+                <div class="form-group">
+                    <label for="specialty" class="form-label">Specialty / Department</label>
+                    <select id="specialty" name="specialty" class="form-control" th:field="*{specialty}">
+                        <option value="">All Specialties</option>
+                        <option th:each="s : ${specialties}" th:value="${s}" th:text="${s}">Cardiology</option>
+                    </select>
+                </div>
+
+                <!-- Hospital Type -->
+                <div class="form-group">
+                    <label for="hospitalType" class="form-label">Hospital Type</label>
+                    <select id="hospitalType" name="hospitalType" class="form-control" th:field="*{hospitalType}">
+                        <option value="">All Types</option>
+                        <option th:each="t : ${hospitalTypes}" th:value="${t}" th:text="${t}">Multi-Specialty</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div style="display: flex; gap: 12px; align-items: center; justify-content: flex-end; border-top: 1px solid var(--border-color); padding-top: 16px;">
+                <a th:href="@{/hospitals}" class="btn btn-outline btn-sm">↺ Reset Filters</a>
+                <button type="submit" class="btn btn-primary btn-sm">Apply Filters</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Results Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div>
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main);">
+                Results <span style="font-size: 0.95rem; font-weight: 500; color: var(--text-muted);">(<span th:text="${resultCount}">0</span> demo hospitals found)</span>
+            </h2>
+        </div>
+        <div>
+            <span class="badge badge-demo">All Listings Demo Data</span>
+        </div>
+    </div>
+
+    <!-- Hospital Cards Grid -->
+    <div th:if="${not #lists.isEmpty(hospitals)}" class="cards-grid">
+        <div th:each="hospital : ${hospitals}" class="card">
+            <div class="card-header-flex">
+                <span class="badge badge-demo">Demo Listing</span>
+                <span class="badge badge-teal" th:text="${hospital.hospitalType}">Multi-Specialty</span>
+            </div>
+
+            <h3 class="card-title" th:text="${hospital.name}">Demo City General Hospital</h3>
+            <div class="card-subtitle">
+                <span>📍</span>
+                <span th:text="${hospital.city} + ', ' + ${hospital.district} + ', Tamil Nadu'">Chennai, Tamil Nadu</span>
+            </div>
+
+            <!-- Sample Address -->
+            <div style="margin: 12px 0; font-size: 0.85rem; color: var(--text-muted); background: var(--bg-muted); padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                <strong>Sample Address:</strong> <span th:text="${hospital.address}">No. 12, GST Road, Chennai</span>
+            </div>
+
+            <!-- Departments -->
+            <div class="department-tags">
+                <span th:each="dept, iter : ${hospital.getDepartmentList()}"
+                      th:if="${iter.index < 4}"
+                      class="dept-pill"
+                      th:text="${dept}">Cardiology</span>
+                <span th:if="${hospital.getDepartmentList().size() > 4}" class="dept-pill"
+                      th:text="'+' + (${hospital.getDepartmentList().size()} - 4) + ' more'">+2 more</span>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 16px;">
+                <span style="font-size: 0.85rem; color: var(--text-muted);">
+                    <span th:text="${hospital.doctors.size()}">3</span> Demo Doctors
+                </span>
+                <a th:href="@{'/hospitals/' + ${hospital.id}}" class="btn btn-primary btn-sm">View Hospital &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div th:if="${#lists.isEmpty(hospitals)}" class="card" style="text-align: center; padding: 48px 24px;">
+        <span style="font-size: 3rem;">🔍</span>
+        <h3 style="font-size: 1.35rem; font-weight: 700; margin: 12px 0 6px;">No demo hospitals found</h3>
+        <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 24px;">
+            We could not find any sample hospitals matching your selected district, city, or specialty. Try clearing one or more filters.
+        </p>
+        <a th:href="@{/hospitals}" class="btn btn-secondary">Reset All Filters</a>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>
+

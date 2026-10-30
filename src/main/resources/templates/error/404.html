@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - Tamil Nadu Smart Hospital</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="container" style="text-align: center; padding: 64px 24px;">
+    <div style="font-size: 5rem; line-height: 1; font-weight: 800; color: var(--primary); margin-bottom: 12px;">404</div>
+    <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--text-main); margin-bottom: 12px;">Page Not Found</h1>
+    <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 28px;">
+        The requested healthcare portal page or sample record could not be found. It may have been moved, renamed, or is unavailable.
+    </p>
+
+    <div style="display: flex; gap: 12px; justify-content: center;">
+        <a th:href="@{/}" class="btn btn-primary">Return to Home</a>
+        <a th:href="@{/hospitals}" class="btn btn-outline">Search Hospitals</a>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>
+

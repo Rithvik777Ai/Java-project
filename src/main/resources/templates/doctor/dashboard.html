@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Portal - Tamil Nadu Smart Hospital</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="container">
+    <div th:replace="~{fragments/alert :: alerts}"></div>
+
+    <!-- Doctor Header Banner -->
+    <div class="card" style="margin-bottom: 32px; padding: 24px; background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 100%);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div style="display: flex; gap: 16px; align-items: center;">
+                <div class="doctor-avatar-circle" style="background: var(--secondary); color: white; width: 56px; height: 56px; font-size: 1.5rem;">
+                    🩺
+                </div>
+                <div>
+                    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+                        <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--text-main);" th:text="${doctor.name}">Dr. K. Anitha</h1>
+                        <span class="badge badge-demo">Doctor Demo Portal</span>
+                    </div>
+                    <div style="color: var(--text-muted); font-size: 0.875rem;">
+                        <span th:text="${doctor.specialty}">Cardiology</span> &bull;
+                        <span th:text="${doctor.hospital.name}">Demo Hospital</span> &bull;
+                        <span th:text="${doctor.hospital.city} + ', ' + ${doctor.hospital.district}">Chennai</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generate standard slots helper button -->
+            <form th:action="@{/doctor/slots/generate-week}" method="post" style="margin: 0;">
+                <input type="hidden" name="doctorId" th:value="${doctor.id}">
+                <button type="submit" class="btn btn-secondary btn-sm" title="Populate next 7 days with standard 30-min slots">
+                    ⚡ Auto-Generate 7 Days of Slots
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notice banner: No medical records exposed -->
+    <div style="background: var(--bg-muted); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 28px; font-size: 0.875rem; color: var(--text-muted); display: flex; align-items: center; gap: 10px;">
+        <span>🔒</span>
+        <span>
+            <strong>Safety Constraint:</strong> Patient medical records, prescription history, and clinical diagnosis charts are not stored or exposed in this demonstration system.
+        </span>
+    </div>
+
+    <!-- Main Doctor Grid: Left (Appointments), Right (Slot Manager) -->
+    <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 28px; align-items: flex-start;">
+        <!-- Left: Appointments Queue -->
+        <section>
+            <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2 class="section-title" style="font-size: 1.35rem;">Patient Consultation Queue</h2>
+                    <p class="section-subtitle">Demo appointments scheduled with you</p>
+                </div>
+                <span class="badge badge-blue"><span th:text="${appointments.size()}">0</span> Total</span>
+            </div>
+
+            <div th:if="${not #lists.isEmpty(appointments)}" class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Ref &amp; Time</th>
+                            <th>Patient Info</th>
+                            <th>Visit Reason</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="appt : ${appointments}">
+                            <td>
+                                <div style="font-family: monospace; font-weight: 700; color: var(--primary);" th:text="${appt.bookingReference}">TNSH-1001</div>
+                                <div style="font-size: 0.85rem; font-weight: 600;" th:text="${appt.getFormattedDate()}">31 Oct 2026</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);" th:text="${appt.getFormattedTime()}">09:00 AM</div>
+                            </td>
+                            <td>
+                                <div style="font-weight: 700;" th:text="${appt.patientName}">Patient Name</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">📱 +91 <span th:text="${appt.patientPhone}">9876543210</span></div>
+                            </td>
+                            <td>
+                                <div style="font-size: 0.85rem; color: var(--text-muted); max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                                     th:text="${appt.reason != null ? appt.reason : 'General Consultation'}">Reason</div>
+                            </td>
+                            <td>
+                                <span th:if="${appt.status.name() == 'CONFIRMED'}" class="badge badge-teal">CONFIRMED</span>
+                                <span th:if="${appt.status.name() == 'COMPLETED'}" class="badge badge-green">COMPLETED</span>
+                                <span th:if="${appt.status.name() == 'CANCELLED'}" class="badge badge-danger">CANCELLED</span>
+                            </td>
+                            <td>
+                                <div th:if="${appt.status.name() == 'CONFIRMED'}" style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                    <!-- Mark Completed Form -->
+                                    <form th:action="@{'/doctor/appointments/' + ${appt.id} + '/complete'}" method="post" style="display: inline; margin: 0;">
+                                        <button type="submit" class="btn btn-success btn-sm" style="padding: 4px 8px; font-size: 0.75rem;" title="Mark this consultation complete">
+                                            ✓ Complete
+                                        </button>
+                                    </form>
+
+                                    <!-- Cancel Appointment Form -->
+                                    <form th:action="@{'/doctor/appointments/' + ${appt.id} + '/cancel'}" method="post" class="confirm-cancel-form" style="display: inline; margin: 0;">
+                                        <button type="submit" class="btn btn-danger btn-sm" style="padding: 4px 8px; font-size: 0.75rem;" title="Cancel demo booking">
+                                            ✕ Cancel
+                                        </button>
+                                    </form>
+                                </div>
+                                <div th:if="${appt.status.name() != 'CONFIRMED'}" style="font-size: 0.8rem; color: var(--text-subtle);">
+                                    Resolved
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div th:if="${#lists.isEmpty(appointments)}" class="card" style="text-align: center; padding: 36px; color: var(--text-muted);">
+                No appointments currently booked for your profile.
+            </div>
+        </section>
+
+        <!-- Right: Slot Management -->
+        <section>
+            <div class="card" style="padding: 24px; margin-bottom: 24px;">
+                <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 12px;">
+                    + Add New Availability Slot
+                </h3>
+
+                <form th:action="@{/doctor/slots/add}" method="post" th:object="${slotForm}">
+                    <input type="hidden" th:field="*{doctorId}">
+
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <label for="slotDate" class="form-label">Date</label>
+                        <input type="date" id="slotDate" class="form-control" th:field="*{date}"
+                               th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" required>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+                        <div class="form-group">
+                            <label for="startTime" class="form-label">Start Time</label>
+                            <input type="time" id="startTime" class="form-control" th:field="*{startTime}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="endTime" class="form-label">End Time</label>
+                            <input type="time" id="endTime" class="form-control" th:field="*{endTime}" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-sm" style="width: 100%;">
+                        Add Slot to Schedule
+                    </button>
+                </form>
+            </div>
+
+            <!-- Existing Slots for selected date -->
+            <div class="card" style="padding: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                    <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main);">
+                        Slots for <span th:text="${#temporals.format(selectedDate, 'dd MMM yyyy')}">Date</span>
+                    </h3>
+
+                    <!-- Filter Date Form -->
+                    <form th:action="@{/doctor/dashboard}" method="get" style="display: flex; gap: 6px; margin: 0;">
+                        <input type="date" name="date" class="form-control" style="padding: 4px 8px; font-size: 0.8rem;"
+                               th:value="${#temporals.format(selectedDate, 'yyyy-MM-dd')}" onchange="this.form.submit()">
+                    </form>
+                </div>
+
+                <div th:if="${not #lists.isEmpty(todaySlots)}" style="display: flex; flex-direction: column; gap: 8px;">
+                    <div th:each="s : ${todaySlots}" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--bg-muted); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                        <div>
+                            <span style="font-weight: 700; font-size: 0.9rem;" th:text="${s.getFormattedStartTime()}">09:00 AM</span>
+                            <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 6px;">(<span th:text="${s.getFormattedTime()}">09:00 - 09:30</span>)</span>
+                        </div>
+
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span th:if="${s.status.name() == 'AVAILABLE'}" class="badge badge-green">AVAILABLE</span>
+                            <span th:if="${s.status.name() == 'BOOKED'}" class="badge badge-demo">BOOKED</span>
+                            <span th:if="${s.status.name() == 'CANCELLED'}" class="badge badge-gray">CANCELLED</span>
+
+                            <!-- Delete slot if not booked -->
+                            <form th:if="${s.status.name() == 'AVAILABLE'}"
+                                  th:action="@{'/doctor/slots/' + ${s.id} + '/delete'}" method="post" style="margin: 0;">
+                                <input type="hidden" name="date" th:value="${#temporals.format(selectedDate, 'yyyy-MM-dd')}">
+                                <button type="submit" class="btn btn-outline btn-sm" style="padding: 2px 6px; font-size: 0.75rem; color: #dc2626;" title="Remove this slot">🗑️</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${#lists.isEmpty(todaySlots)}" style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 16px 0;">
+                    No slots created for this date.
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>
+

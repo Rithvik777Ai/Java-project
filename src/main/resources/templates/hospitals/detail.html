@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${hospital.name} + ' - Tamil Nadu Smart Hospital'">Hospital Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="container">
+    <div th:replace="~{fragments/alert :: alerts}"></div>
+
+    <!-- Breadcrumb & Demo Banner -->
+    <div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <div style="font-size: 0.9rem; color: var(--text-muted);">
+            <a th:href="@{/hospitals}">&larr; Back to Hospitals</a> /
+            <span th:text="${hospital.district}">Chennai</span> /
+            <span th:text="${hospital.name}">Hospital</span>
+        </div>
+        <span class="badge badge-demo">Demo Hospital Record</span>
+    </div>
+
+    <!-- Hospital Overview Card -->
+    <div class="card" style="margin-bottom: 32px; padding: 32px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+            <div>
+                <span class="badge badge-teal" th:text="${hospital.hospitalType}" style="margin-bottom: 8px;">Multi-Specialty</span>
+                <h1 style="font-size: 2rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;" th:text="${hospital.name}">
+                    Demo City General Hospital
+                </h1>
+                <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 0.95rem;">
+                    <span>📍</span>
+                    <span th:text="${hospital.city} + ', ' + ${hospital.district} + ', Tamil Nadu, India'">Chennai, Tamil Nadu, India</span>
+                </div>
+            </div>
+
+            <!-- Notice Callout -->
+            <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: var(--radius-md); padding: 12px 16px; max-width: 320px; font-size: 0.85rem; color: #92400e;">
+                <strong>⚠️ Notice:</strong> Fictional demonstration listing. Contact numbers and physical facilities are simulated samples.
+            </div>
+        </div>
+
+        <div style="margin: 24px 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 20px 0;">
+            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">About This Sample Institution</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;" th:text="${hospital.description}">
+                Hospital description.
+            </p>
+
+            <div style="margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+                <div style="background: var(--bg-muted); padding: 12px 16px; border-radius: var(--radius-sm);">
+                    <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Sample Address</div>
+                    <div style="font-weight: 600; color: var(--text-main); margin-top: 2px;" th:text="${hospital.address}">No. 12, GST Road</div>
+                </div>
+
+                <div style="background: var(--bg-muted); padding: 12px 16px; border-radius: var(--radius-sm);">
+                    <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">State &amp; District</div>
+                    <div style="font-weight: 600; color: var(--text-main); margin-top: 2px;" th:text="${hospital.district} + ' District, Tamil Nadu'">Chennai District, Tamil Nadu</div>
+                </div>
+
+                <div style="background: var(--bg-muted); padding: 12px 16px; border-radius: var(--radius-sm);">
+                    <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Sample Helpline (Demo)</div>
+                    <div style="font-weight: 600; color: var(--text-main); margin-top: 2px;" th:text="${hospital.phone}">044-00000000</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Departments -->
+        <div>
+            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 12px;">Active Medical Departments</h3>
+            <div class="department-tags">
+                <span th:each="dept : ${hospital.getDepartmentList()}"
+                      class="badge badge-blue"
+                      style="font-size: 0.85rem; padding: 6px 12px; font-weight: 600;"
+                      th:text="${dept}">General Medicine</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Doctors Associated With This Hospital -->
+    <section>
+        <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+                <h2 class="section-title">Associated Demo Doctors</h2>
+                <p class="section-subtitle">Specialists affiliated with this sample hospital who have demonstration OPD slots</p>
+            </div>
+            <span class="badge badge-gray"><span th:text="${doctors.size()}">0</span> Doctors Listed</span>
+        </div>
+
+        <div th:if="${not #lists.isEmpty(doctors)}" class="cards-grid">
+            <div th:each="doc : ${doctors}" class="card">
+                <div style="display: flex; gap: 14px; align-items: flex-start;">
+                    <div class="doctor-avatar-circle">🩺</div>
+                    <div style="flex: 1;">
+                        <span class="badge badge-demo" style="margin-bottom: 4px;">Sample Doctor</span>
+                        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main);" th:text="${doc.name}">Dr. K. Anitha</h3>
+                        <div style="color: var(--primary); font-weight: 600; font-size: 0.9rem;" th:text="${doc.specialty}">Cardiology</div>
+                    </div>
+                </div>
+
+                <div style="margin: 16px 0; font-size: 0.875rem; color: var(--text-muted);">
+                    <div style="margin-bottom: 4px;"><strong>Qualifications:</strong> <span th:text="${doc.qualification}">MBBS, MD</span></div>
+                    <div style="margin-bottom: 4px;"><strong>Languages:</strong> <span th:text="${doc.languages}">Tamil, English</span></div>
+                    <div style="margin-bottom: 4px;"><strong>Consultation:</strong> <span th:text="${doc.consultationType}">In-Person</span></div>
+                </div>
+
+                <div style="border-top: 1px solid var(--border-color); padding-top: 14px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">
+                        Demo OPD: <span th:text="${doc.roomNumber}">Room 101</span>
+                    </span>
+                    <a th:href="@{'/doctors/' + ${doc.id}}" class="btn btn-primary btn-sm">View Slots &amp; Book &rarr;</a>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(doctors)}" class="card" style="text-align: center; padding: 32px;">
+            <p style="color: var(--text-muted);">No demo practitioners are currently linked to this facility.</p>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>
+

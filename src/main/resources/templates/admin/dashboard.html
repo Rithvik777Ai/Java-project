@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>State Administration Portal - Tamil Nadu Smart Hospital</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="container">
+    <div th:replace="~{fragments/alert :: alerts}"></div>
+
+    <!-- Admin Top Header -->
+    <div class="card" style="margin-bottom: 32px; padding: 24px; background: linear-gradient(135deg, #f0fdfa 0%, #ffffff 100%); border-left: 4px solid var(--primary);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+                    <h1 style="font-size: 1.6rem; font-weight: 800; color: var(--text-main);">
+                        Tamil Nadu State Health Administration (Demo)
+                    </h1>
+                    <span class="badge badge-teal">ADMIN CONSOLE</span>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    Central oversight of sample hospitals, doctors, department slots, and system-wide demo bookings.
+                </p>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <a th:href="@{/admin/hospitals/new}" class="btn btn-primary btn-sm">+ Add Demo Hospital</a>
+                <a th:href="@{/admin/doctors/new}" class="btn btn-secondary btn-sm">+ Add Demo Doctor</a>
+                <a th:href="@{/h2-console}" target="_blank" class="btn btn-outline btn-sm" title="Inspect H2 in-memory DB">🗄️ H2 Console</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- State Overview Counters -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 36px;">
+        <div class="card" style="padding: 20px; text-align: center;">
+            <div style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Demo Hospitals</div>
+            <div style="font-size: 2.2rem; font-weight: 800; color: var(--primary); margin: 4px 0;" th:text="${totalHospitals}">12</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Across Tamil Nadu</div>
+        </div>
+
+        <div class="card" style="padding: 20px; text-align: center;">
+            <div style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Specialist Doctors</div>
+            <div style="font-size: 2.2rem; font-weight: 800; color: var(--secondary); margin: 4px 0;" th:text="${totalDoctors}">15</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Active in catalog</div>
+        </div>
+
+        <div class="card" style="padding: 20px; text-align: center;">
+            <div style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Total Appointments</div>
+            <div style="font-size: 2.2rem; font-weight: 800; color: var(--text-main); margin: 4px 0;" th:text="${stats.totalBookings}">1</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Logged in system</div>
+        </div>
+
+        <div class="card" style="padding: 20px; text-align: center;">
+            <div style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Registered Users</div>
+            <div style="font-size: 2.2rem; font-weight: 800; color: var(--accent-green); margin: 4px 0;" th:text="${totalUsers}">3</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Patient/Doctor/Admin</div>
+        </div>
+    </div>
+
+    <!-- Section: TextBee.dev SMS Gateway Configuration & Diagnostics -->
+    <section style="margin-bottom: 48px;">
+        <div class="card" style="padding: 28px; border-top: 4px solid var(--secondary);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                        <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--text-main);">
+                            📱 TextBee.dev SMS Gateway Configuration &amp; Diagnostics
+                        </h2>
+                        <span th:if="${smsService.enabled}" class="badge badge-green">ENABLED</span>
+                        <span th:if="${!smsService.enabled}" class="badge badge-gray">DISABLED</span>
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        Real-time delivery gateway for automated patient appointment booking, cancellation, and status updates.
+                    </p>
+                </div>
+
+                <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius-md); padding: 10px 14px; font-size: 0.825rem; color: #1e40af; max-width: 380px;">
+                    <strong>🔒 Security Notice:</strong> API credentials are saved strictly server-side in environment variables and are never exposed to browser clients or frontend code.
+                </div>
+            </div>
+
+            <!-- Configuration Overview Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                <div style="background: var(--bg-muted); padding: 14px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                    <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">TextBee Integration Status</div>
+                    <div style="font-weight: 700; font-size: 1.05rem; margin-top: 2px;">
+                        <span th:if="${smsService.configured}" style="color: var(--accent-green);">✓ Configured</span>
+                        <span th:if="${!smsService.configured}" style="color: #dc2626;">✕ Missing API Key</span>
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-muted); padding: 14px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                    <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">API Key (Masked)</div>
+                    <div style="font-family: monospace; font-weight: 700; font-size: 1rem; color: var(--text-main); margin-top: 2px;" th:text="${smsService.maskedApiKey}">
+                        tb_••••••••1234
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-muted); padding: 14px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                    <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Target Device ID</div>
+                    <div style="font-family: monospace; font-size: 0.9rem; font-weight: 600; color: var(--text-main); margin-top: 2px;" th:text="${smsService.deviceId}">
+                        Default
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-muted); padding: 14px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                    <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Gateway Endpoint</div>
+                    <div style="font-family: monospace; font-size: 0.825rem; font-weight: 600; color: var(--text-muted); margin-top: 2px;" th:text="${smsService.apiUrl} + '/gateway/send-sms'">
+                        https://api.textbee.dev/api/v1/gateway/send-sms
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test SMS Diagnostic Form -->
+            <div style="background: #fafbfc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px;">
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                    <span>🧪</span> Dispatch Diagnostic Test SMS
+                </h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+                    Verify connectivity with your registered Android phone / TextBee gateway device by sending a test SMS.
+                </p>
+
+                <form th:action="@{/admin/sms/test}" method="post">
+                    <div style="display: grid; grid-template-columns: 240px 1fr 160px; gap: 14px; align-items: flex-end;">
+                        <div class="form-group">
+                            <label for="testPhone" class="form-label" style="font-size: 0.825rem;">Recipient Mobile (India)</label>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <span style="background: var(--bg-muted); border: 1.5px solid var(--border-color); padding: 8px 10px; border-radius: var(--radius-md); font-weight: 600; font-size: 0.85rem; color: var(--text-muted);">+91</span>
+                                <input type="tel" id="testPhone" name="testPhone" class="form-control" style="padding: 8px 12px;"
+                                       placeholder="9876543210" maxlength="10" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="testMessage" class="form-label" style="font-size: 0.825rem;">Test Message Content</label>
+                            <input type="text" id="testMessage" name="testMessage" class="form-control" style="padding: 8px 12px;"
+                                   value="[Tamil Nadu Smart Hospital] Diagnostic test SMS notification from admin console.">
+                        </div>
+
+                        <div>
+                            <button type="submit" class="btn btn-secondary" style="width: 100%; height: 38px; font-size: 0.85rem;">
+                                🚀 Send Test SMS
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 1: All Demo Appointments with Filters -->
+    <section style="margin-bottom: 48px;">
+        <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+                <h2 class="section-title" style="font-size: 1.4rem;">Demo Appointments Audit</h2>
+                <p class="section-subtitle">Real-time log of demo appointments with multi-criteria filtering</p>
+            </div>
+            <span class="badge badge-demo">Demo Records</span>
+        </div>
+
+        <!-- Filter Form -->
+        <div class="card" style="padding: 16px 20px; margin-bottom: 20px; background: var(--bg-muted);">
+            <form th:action="@{/admin/dashboard}" method="get" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) 120px; gap: 12px; align-items: flex-end;">
+                <!-- Date Filter -->
+                <div class="form-group">
+                    <label for="filterDate" class="form-label" style="font-size: 0.8rem;">Date</label>
+                    <input type="date" id="filterDate" name="date" class="form-control"
+                           th:value="${selectedDate != null ? #temporals.format(selectedDate, 'yyyy-MM-dd') : ''}">
+                </div>
+
+                <!-- Hospital Filter -->
+                <div class="form-group">
+                    <label for="filterHospital" class="form-label" style="font-size: 0.8rem;">Hospital</label>
+                    <select id="filterHospital" name="hospitalId" class="form-control">
+                        <option value="">All Hospitals</option>
+                        <option th:each="h : ${hospitals}" th:value="${h.id}" th:text="${h.name}" th:selected="${h.id == selectedHospitalId}">Hospital</option>
+                    </select>
+                </div>
+
+                <!-- Doctor Filter -->
+                <div class="form-group">
+                    <label for="filterDoctor" class="form-label" style="font-size: 0.8rem;">Doctor</label>
+                    <select id="filterDoctor" name="doctorId" class="form-control">
+                        <option value="">All Doctors</option>
+                        <option th:each="d : ${doctors}" th:value="${d.id}" th:text="${d.name}" th:selected="${d.id == selectedDoctorId}">Doctor</option>
+                    </select>
+                </div>
+
+                <!-- Status Filter -->
+                <div class="form-group">
+                    <label for="filterStatus" class="form-label" style="font-size: 0.8rem;">Status</label>
+                    <select id="filterStatus" name="status" class="form-control">
+                        <option value="">All Statuses</option>
+                        <option value="CONFIRMED" th:selected="${selectedStatus != null && selectedStatus.name() == 'CONFIRMED'}">CONFIRMED</option>
+                        <option value="COMPLETED" th:selected="${selectedStatus != null && selectedStatus.name() == 'COMPLETED'}">COMPLETED</option>
+                        <option value="CANCELLED" th:selected="${selectedStatus != null && selectedStatus.name() == 'CANCELLED'}">CANCELLED</option>
+                    </select>
+                </div>
+
+                <!-- Filter Actions -->
+                <div>
+                    <button type="submit" class="btn btn-primary btn-sm" style="width: 100%; height: 38px;">Filter</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Appointments Table -->
+        <div th:if="${not #lists.isEmpty(appointments)}" class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Booking Ref</th>
+                        <th>Patient Name &amp; Contact</th>
+                        <th>Doctor &amp; Specialty</th>
+                        <th>Hospital &amp; District</th>
+                        <th>Date &amp; Time</th>
+                        <th>Status</th>
+                        <th>Slip</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="a : ${appointments}">
+                        <td>
+                            <strong style="font-family: monospace; color: var(--primary);" th:text="${a.bookingReference}">TNSH-1001</strong>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;" th:text="${a.patientName}">Patient Name</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">📱 +91 <span th:text="${a.patientPhone}">9876543210</span></div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600;" th:text="${a.doctor.name}">Doctor Name</div>
+                            <div style="font-size: 0.8rem; color: var(--primary);" th:text="${a.doctor.specialty}">Specialty</div>
+                        </td>
+                        <td>
+                            <div th:text="${a.hospital.name}">Hospital</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);" th:text="${a.hospital.district}">Chennai</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600;" th:text="${a.getFormattedDate()}">31 Oct 2026</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);" th:text="${a.getFormattedTime()}">09:00 AM</div>
+                        </td>
+                        <td>
+                            <span th:if="${a.status.name() == 'CONFIRMED'}" class="badge badge-teal">CONFIRMED</span>
+                            <span th:if="${a.status.name() == 'COMPLETED'}" class="badge badge-green">COMPLETED</span>
+                            <span th:if="${a.status.name() == 'CANCELLED'}" class="badge badge-danger">CANCELLED</span>
+                        </td>
+                        <td>
+                            <a th:href="@{'/appointments/confirmation/' + ${a.bookingReference}}" class="btn btn-outline btn-sm">View Slip</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${#lists.isEmpty(appointments)}" class="card" style="text-align: center; padding: 24px; color: var(--text-muted);">
+            No appointments match the given filter criteria.
+        </div>
+    </section>
+
+    <!-- Section 2: Manage Fictional Hospitals -->
+    <section style="margin-bottom: 48px;">
+        <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2 class="section-title" style="font-size: 1.4rem;">Manage Hospitals (Tamil Nadu)</h2>
+                <p class="section-subtitle">Add, edit, or activate/deactivate sample hospital directory listings</p>
+            </div>
+            <a th:href="@{/admin/hospitals/new}" class="btn btn-primary btn-sm">+ Add Hospital</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Hospital Name</th>
+                        <th>Type</th>
+                        <th>District &amp; City</th>
+                        <th>Departments</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="h : ${hospitals}">
+                        <td>
+                            <strong th:text="${h.name}">Demo Hospital</strong>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);" th:text="${h.address}">Sample Address</div>
+                        </td>
+                        <td th:text="${h.hospitalType}">Multi-Specialty</td>
+                        <td>
+                            <div th:text="${h.district}">Chennai</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);" th:text="${h.city}">Guindy</div>
+                        </td>
+                        <td>
+                            <div style="max-width: 200px; font-size: 0.8rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                                 th:text="${h.departments}">Departments</div>
+                        </td>
+                        <td>
+                            <span th:if="${h.active}" class="badge badge-green">ACTIVE</span>
+                            <span th:if="${!h.active}" class="badge badge-danger">INACTIVE</span>
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 6px;">
+                                <a th:href="@{'/admin/hospitals/' + ${h.id} + '/edit'}" class="btn btn-outline btn-sm">Edit</a>
+                                
+                                <form th:action="@{'/admin/hospitals/' + ${h.id} + '/toggle'}" method="post" style="display: inline; margin: 0;">
+                                    <button type="submit" class="btn btn-outline btn-sm"
+                                            th:text="${h.active ? 'Deactivate' : 'Activate'}"
+                                            th:style="${h.active ? 'color: #dc2626;' : 'color: #059669;'}">Toggle</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Section 3: Manage Fictional Doctors & Slot Generation -->
+    <section style="margin-bottom: 48px;">
+        <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2 class="section-title" style="font-size: 1.4rem;">Manage Doctors &amp; Slots</h2>
+                <p class="section-subtitle">Add or edit sample doctors and trigger batch slot generation</p>
+            </div>
+            <a th:href="@{/admin/doctors/new}" class="btn btn-secondary btn-sm">+ Add Doctor</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Doctor Name</th>
+                        <th>Specialty</th>
+                        <th>Hospital</th>
+                        <th>Languages</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="d : ${doctors}">
+                        <td>
+                            <strong th:text="${d.name}">Dr. K. Anitha</strong>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);" th:text="${d.qualification}">MBBS, MD</div>
+                        </td>
+                        <td>
+                            <span class="badge badge-teal" th:text="${d.specialty}">Cardiology</span>
+                        </td>
+                        <td>
+                            <div th:text="${d.hospital.name}">Demo Hospital</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);" th:text="${d.hospital.district}">Chennai</div>
+                        </td>
+                        <td th:text="${d.languages}">Tamil, English</td>
+                        <td>
+                            <span th:if="${d.active}" class="badge badge-green">ACTIVE</span>
+                            <span th:if="${!d.active}" class="badge badge-danger">INACTIVE</span>
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                <a th:href="@{'/admin/doctors/' + ${d.id} + '/edit'}" class="btn btn-outline btn-sm">Edit</a>
+                                
+                                <form th:action="@{/admin/slots/generate}" method="post" style="display: inline; margin: 0;">
+                                    <input type="hidden" name="doctorId" th:value="${d.id}">
+                                    <input type="hidden" name="days" value="7">
+                                    <button type="submit" class="btn btn-secondary btn-sm" title="Generate 7 days of 30-min slots">+7D Slots</button>
+                                </form>
+
+                                <form th:action="@{'/admin/doctors/' + ${d.id} + '/toggle'}" method="post" style="display: inline; margin: 0;">
+                                    <button type="submit" class="btn btn-outline btn-sm"
+                                            th:text="${d.active ? 'Deactivate' : 'Activate'}"
+                                            th:style="${d.active ? 'color: #dc2626;' : 'color: #059669;'}">Toggle</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>
+

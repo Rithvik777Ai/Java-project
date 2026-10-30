@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Registration - Tamil Nadu Smart Hospital</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="container">
+    <div class="auth-wrapper" style="max-width: 520px;">
+        <div class="auth-header">
+            <span class="badge badge-demo" style="margin-bottom: 8px;">Demo Registration</span>
+            <h1 class="auth-title">Create Patient Account</h1>
+            <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: 4px;">
+                Register to track and manage demonstration appointments in Tamil Nadu.
+            </p>
+        </div>
+
+        <div th:replace="~{fragments/alert :: alerts}"></div>
+        <div th:if="${registrationError}" class="alert alert-danger" th:text="${registrationError}">Error</div>
+
+        <form th:action="@{/register}" method="post" th:object="${registerForm}">
+            <!-- Full Name -->
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label for="name" class="form-label">Full Name <span style="color: red;">*</span></label>
+                <input type="text" id="name" class="form-control" th:field="*{name}"
+                       th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
+                       placeholder="e.g. Ramesh Krishnan">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label for="email" class="form-label">Email Address <span style="color: red;">*</span></label>
+                <input type="email" id="email" class="form-control" th:field="*{email}"
+                       th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                       placeholder="ramesh@example.com">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label for="phone" class="form-label">10-Digit Mobile Number <span style="color: red;">*</span></label>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="background: var(--bg-muted); border: 1.5px solid var(--border-color); padding: 10px 14px; border-radius: var(--radius-md); font-weight: 600; color: var(--text-muted);">+91</span>
+                    <input type="tel" id="phone" class="form-control" th:field="*{phone}"
+                           th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid' : ''"
+                           placeholder="9876543210" maxlength="10">
+                </div>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Phone error</div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label for="password" class="form-label">Password <span style="color: red;">*</span></label>
+                <input type="password" id="password" class="form-control" th:field="*{password}"
+                       th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                       placeholder="Minimum 6 characters">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label for="confirmPassword" class="form-label">Confirm Password <span style="color: red;">*</span></label>
+                <input type="password" id="confirmPassword" class="form-control" th:field="*{confirmPassword}"
+                       th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid' : ''"
+                       placeholder="Re-enter password">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">Password match error</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 16px;">
+                Create Demo Account
+            </button>
+        </form>
+
+        <div style="text-align: center; font-size: 0.875rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 16px;">
+            Already have an account? <a th:href="@{/login}" style="font-weight: 600;">Sign in here</a>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>
+

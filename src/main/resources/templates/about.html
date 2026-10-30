@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Tamil Nadu Smart Hospital</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="container" style="max-width: 900px;">
+    <div class="section-header">
+        <span class="badge badge-teal" style="margin-bottom: 8px;">About The Initiative</span>
+        <h1 class="section-title">Tamil Nadu Smart Hospital Portal</h1>
+        <p class="section-subtitle">A digital health scheduling architecture and demonstration platform</p>
+    </div>
+
+    <div class="card" style="padding: 32px; margin-bottom: 32px; line-height: 1.7;">
+        <h2 style="font-size: 1.4rem; font-weight: 700; color: var(--text-main); margin-bottom: 12px;">Purpose &amp; Vision</h2>
+        <p style="color: var(--text-muted); margin-bottom: 16px;">
+            The <strong>Tamil Nadu Smart Hospital</strong> platform is an advanced web-based healthcare access prototype built to connect patients across all 38 districts of Tamil Nadu with multi-specialty hospitals, clinical practitioners, and outpatient time slots.
+        </p>
+
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin: 24px 0 8px;">Architectural Highlights</h3>
+        <ul style="color: var(--text-muted); padding-left: 20px; margin-bottom: 24px;">
+            <li><strong>Robust Java Backend:</strong> Engineered on modern Java with Spring Boot 3.3 and Spring MVC.</li>
+            <li><strong>Accessible Server-Side Views:</strong> Dynamic server-rendered HTML using Thymeleaf templates with semantic markup and visible focus outlines.</li>
+            <li><strong>Thread-Safe Concurrency Protection:</strong> Concurrency check and database-level transactional locks to prevent double-booking of any time slot.</li>
+            <li><strong>Role-Aware Access:</strong> Segregated roles and dashboards for Patients, Doctors, and Administrators with simulated demo sign-in shortcuts.</li>
+            <li><strong>Local In-Memory Persistence:</strong> Powered by an embedded H2 database with automatic schema generation and fictional demo seed data.</li>
+        </ul>
+
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin: 24px 0 8px;">Demonstration Scope &amp; Privacy Standards</h3>
+        <div style="background: #fffbeb; border: 1.5px solid #fef3c7; border-radius: var(--radius-md); padding: 18px; margin-bottom: 20px;">
+            <p style="font-size: 0.95rem; color: #92400e; font-weight: 600; margin-bottom: 6px;">
+                ⚠️ Demonstration Safety Notice:
+            </p>
+            <p style="font-size: 0.875rem; color: #92400e; line-height: 1.5;">
+                All hospital names, doctor qualifications, time slots, and appointments are synthetic demo records. No real medical records, government ID numbers (Aadhaar), or payments are stored or requested. Real appointments must be confirmed directly with official healthcare providers.
+            </p>
+        </div>
+
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin: 24px 0 8px;">Tamil Nadu Emergency Contacts</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 12px;">
+            <div style="background: var(--bg-muted); border-radius: var(--radius-sm); padding: 16px; border: 1px solid var(--border-color);">
+                <div style="font-size: 1.4rem; font-weight: 800; color: #dc2626;">108</div>
+                <div style="font-weight: 700; color: var(--text-main);">Emergency Ambulance</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">24/7 Free Statewide Ambulance Service</div>
+            </div>
+
+            <div style="background: var(--bg-muted); border-radius: var(--radius-sm); padding: 16px; border: 1px solid var(--border-color);">
+                <div style="font-size: 1.4rem; font-weight: 800; color: var(--primary);">104</div>
+                <div style="font-weight: 700; color: var(--text-main);">Health Helpline</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Tamil Nadu Medical Advice &amp; Guidance</div>
+            </div>
+
+            <div style="background: var(--bg-muted); border-radius: var(--radius-sm); padding: 16px; border: 1px solid var(--border-color);">
+                <div style="font-size: 1.4rem; font-weight: 800; color: var(--secondary);">102</div>
+                <div style="font-weight: 700; color: var(--text-main);">Pregnancy Support</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Maternal &amp; Child Health Transport</div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>
+

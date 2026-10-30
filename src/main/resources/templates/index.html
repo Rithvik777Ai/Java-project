@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamil Nadu Smart Hospital - Find Hospitals &amp; Doctors</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Header Fragment -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-inner">
+        <div class="hero-tag">
+            <span>📍 Serving All 38 Districts of Tamil Nadu (Prototype)</span>
+        </div>
+        <h1 class="hero-title">
+            Find hospitals and doctors across <span class="text-highlight">Tamil Nadu</span>
+        </h1>
+        <p class="hero-desc">
+            Explore verified sample medical institutions, select specialists, and test appointment bookings with instant confirmation.
+        </p>
+
+        <!-- Search Card -->
+        <div class="hero-search-card">
+            <form th:action="@{/hospitals}" method="get" class="search-grid" th:object="${searchForm}">
+                <!-- District Selector -->
+                <div class="form-group">
+                    <label for="districtSelect" class="form-label">Tamil Nadu District</label>
+                    <select id="districtSelect" name="district" class="form-control" th:field="*{district}">
+                        <option value="">All Districts (Statewide)</option>
+                        <option th:each="dist : ${districts}" th:value="${dist}" th:text="${dist}">Chennai</option>
+                    </select>
+                </div>
+
+                <!-- Specialty Selector -->
+                <div class="form-group">
+                    <label for="specialtySelect" class="form-label">Medical Specialty</label>
+                    <select id="specialtySelect" name="specialty" class="form-control" th:field="*{specialty}">
+                        <option value="">All Specialties</option>
+                        <option th:each="spec : ${specialties}" th:value="${spec}" th:text="${spec}">Cardiology</option>
+                    </select>
+                </div>
+
+                <!-- Appointment Date Selector -->
+                <div class="form-group">
+                    <label for="dateSelect" class="form-label">Preferred Date</label>
+                    <input type="date" id="dateSelect" name="appointmentDate" class="form-control"
+                           th:value="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"
+                           th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}">
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; height: 46px;">
+                        🔍 Search Hospitals
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Ribbon -->
+<section class="stats-ribbon">
+    <div class="container" style="padding-top: 0; padding-bottom: 0;">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-value" th:text="${totalHospitals}">12</div>
+                <div class="stat-label">Demo Hospitals</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" th:text="${totalDoctors}">15</div>
+                <div class="stat-label">Specialist Doctors</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" th:text="${totalDistricts}">10</div>
+                <div class="stat-label">TN Districts Covered</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" th:text="${stats.totalBookings}">1</div>
+                <div class="stat-label">Demo Bookings Made</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content Container -->
+<main class="container">
+    <!-- Alerts Fragment -->
+    <div th:replace="~{fragments/alert :: alerts}"></div>
+
+    <!-- Quick Specialties Navigation -->
+    <section style="margin-bottom: 48px;">
+        <div class="section-header">
+            <h2 class="section-title">Common Specialties</h2>
+            <p class="section-subtitle">Quickly filter hospitals and practitioners by major medical department</p>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+            <a th:href="@{/hospitals(specialty='Cardiology')}" class="btn btn-secondary">❤️ Cardiology</a>
+            <a th:href="@{/hospitals(specialty='General Medicine')}" class="btn btn-secondary">🩺 General Medicine</a>
+            <a th:href="@{/hospitals(specialty='Orthopedics')}" class="btn btn-secondary">🦴 Orthopedics</a>
+            <a th:href="@{/hospitals(specialty='Pediatrics')}" class="btn btn-secondary">👶 Pediatrics</a>
+            <a th:href="@{/hospitals(specialty='Neurology')}" class="btn btn-secondary">🧠 Neurology</a>
+            <a th:href="@{/hospitals(specialty='Dermatology')}" class="btn btn-secondary">🧴 Dermatology</a>
+            <a th:href="@{/hospitals(specialty='Gastroenterology')}" class="btn btn-secondary">🔬 Gastroenterology</a>
+            <a th:href="@{/hospitals(specialty='Ophthalmology')}" class="btn btn-secondary">👁️ Ophthalmology</a>
+        </div>
+    </section>
+
+    <!-- Featured Fictional Demo Hospitals -->
+    <section style="margin-bottom: 56px;">
+        <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+                <h2 class="section-title">Featured Demo Hospitals</h2>
+                <p class="section-subtitle">Sample healthcare centers located in Tamil Nadu with active consultation slots</p>
+            </div>
+            <a th:href="@{/hospitals}" class="btn btn-outline-primary btn-sm">View All Hospitals &rarr;</a>
+        </div>
+
+        <div class="cards-grid">
+            <div th:each="hospital : ${featuredHospitals}" class="card">
+                <div class="card-header-flex">
+                    <span class="badge badge-demo">Demo Listing</span>
+                    <span class="badge badge-teal" th:text="${hospital.hospitalType}">Multi-Specialty</span>
+                </div>
+
+                <h3 class="card-title" th:text="${hospital.name}">Demo City General Hospital</h3>
+                <div class="card-subtitle">
+                    <span>📍</span>
+                    <span th:text="${hospital.city} + ', ' + ${hospital.district} + ', Tamil Nadu'">Chennai, Tamil Nadu</span>
+                </div>
+
+                <p style="font-size: 0.875rem; color: var(--text-muted); margin: 12px 0;" th:text="${hospital.description}">
+                    A fictional premier multi-specialty healthcare centre in Chennai.
+                </p>
+
+                <!-- Sample Departments -->
+                <div class="department-tags">
+                    <span th:each="dept, iter : ${hospital.getDepartmentList()}"
+                          th:if="${iter.index < 4}"
+                          class="dept-pill"
+                          th:text="${dept}">General Medicine</span>
+                    <span th:if="${hospital.getDepartmentList().size() > 4}" class="dept-pill"
+                          th:text="'+' + (${hospital.getDepartmentList().size()} - 4) + ' more'">+2 more</span>
+                </div>
+
+                <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 16px;">
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">Sample Address available</span>
+                    <a th:href="@{'/hospitals/' + ${hospital.id}}" class="btn btn-primary btn-sm">View Hospital &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Three-Step "How It Works" Section -->
+    <section style="margin-bottom: 56px;">
+        <div class="section-header" style="text-align: center;">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Book a demo healthcare appointment across Tamil Nadu in 3 simple steps</p>
+        </div>
+
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-num">1</div>
+                <h3 class="step-title">Search &amp; Filter</h3>
+                <p class="step-desc">
+                    Select your Tamil Nadu district, city or town, and medical specialty to discover relevant sample hospitals.
+                </p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-num">2</div>
+                <h3 class="step-title">Choose a Doctor</h3>
+                <p class="step-desc">
+                    View doctor credentials, languages spoken, and real-time demonstration availability slots.
+                </p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-num">3</div>
+                <h3 class="step-title">Book an Appointment</h3>
+                <p class="step-desc">
+                    Confirm your slot with patient details and receive an immediate reference token for your demo visit.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Safety & Disclaimer Callout Card -->
+    <section class="card" style="background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-left: 4px solid var(--primary);">
+        <div style="display: flex; gap: 16px; align-items: flex-start;">
+            <span style="font-size: 2rem;">🛡️</span>
+            <div>
+                <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
+                    Platform Notice &amp; Patient Safety
+                </h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;">
+                    This application is a <strong>demonstration prototype</strong> developed for the Tamil Nadu healthcare technology evaluation.
+                    All hospital listings, doctor names, OPD schedules, and appointment availability are purely sample fictional records.
+                    No real health records, payment details, or government identity numbers are collected.
+                </p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Footer Fragment -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>
+
