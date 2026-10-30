@@ -3,8 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tamil Nadu Smart Hospital - Find Hospitals &amp; Doctors</title>
+    <title>CuraTransit – Smart Hospital Finder &amp; Medical Transit Hub</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .feature-pills {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        .feature-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 14px;
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+        .feature-pill:hover {
+            transform: translateY(-2px);
+            background: white;
+            box-shadow: var(--shadow-md);
+            color: var(--primary);
+        }
+        .pillar-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease;
+        }
+        .pillar-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+        .pillar-icon {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+        .pillar-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+        .pillar-desc {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+    </style>
 </head>
 <body>
 
@@ -15,13 +72,13 @@
 <section class="hero">
     <div class="hero-inner">
         <div class="hero-tag">
-            <span>📍 Serving All 38 Districts of Tamil Nadu (Prototype)</span>
+            <span>🚆 Smart Healthcare &amp; Medical Transit System (Demo Prototype)</span>
         </div>
         <h1 class="hero-title">
-            Find hospitals and doctors across <span class="text-highlight">Tamil Nadu</span>
+            Find hospitals, doctors, and transit assistance across <span class="text-highlight">Tamil Nadu</span>
         </h1>
         <p class="hero-desc">
-            Explore verified sample medical institutions, select specialists, and test appointment bookings with instant confirmation.
+            Discover verified healthcare institutions, compare emergency and ICU facilities side-by-side, plan travel from other districts or states, and book demo outpatient appointments.
         </p>
 
         <!-- Search Card -->
@@ -31,7 +88,7 @@
                 <div class="form-group">
                     <label for="districtSelect" class="form-label">Tamil Nadu District</label>
                     <select id="districtSelect" name="district" class="form-control" th:field="*{district}">
-                        <option value="">All Districts (Statewide)</option>
+                        <option value="">All 38 Districts</option>
                         <option th:each="dist : ${districts}" th:value="${dist}" th:text="${dist}">Chennai</option>
                     </select>
                 </div>
@@ -45,12 +102,11 @@
                     </select>
                 </div>
 
-                <!-- Appointment Date Selector -->
+                <!-- Keyword / Hospital Name -->
                 <div class="form-group">
-                    <label for="dateSelect" class="form-label">Preferred Date</label>
-                    <input type="date" id="dateSelect" name="appointmentDate" class="form-control"
-                           th:value="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"
-                           th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}">
+                    <label for="querySelect" class="form-label">Facility Keyword / Name</label>
+                    <input type="text" id="querySelect" name="query" class="form-control"
+                           placeholder="e.g. Heart, City, General...">
                 </div>
 
                 <!-- Submit Button -->
@@ -61,6 +117,22 @@
                 </div>
             </form>
         </div>
+
+        <!-- Quick Access Feature Pills -->
+        <div class="feature-pills">
+            <a th:href="@{/hospitals(hasEmergency=true)}" class="feature-pill" style="border-color: #fca5a5; color: #dc2626;">
+                🚨 24x7 Emergency Services
+            </a>
+            <a th:href="@{/hospitals(hasIcu=true)}" class="feature-pill" style="border-color: #bae6fd; color: #0284c7;">
+                🛏️ ICU Bed Availability
+            </a>
+            <a th:href="@{/hospitals/compare}" class="feature-pill">
+                ⚖️ Side-by-Side Hospital Comparison
+            </a>
+            <a th:href="@{/hospitals(sortBy='icuBeds')}" class="feature-pill">
+                🔝 Highest ICU Bed Capacity
+            </a>
+        </div>
     </div>
 </section>
 
@@ -70,7 +142,7 @@
         <div class="stats-grid">
             <div class="stat-item">
                 <div class="stat-value" th:text="${totalHospitals}">12</div>
-                <div class="stat-label">Demo Hospitals</div>
+                <div class="stat-label">Hospitals Mapped</div>
             </div>
             <div class="stat-item">
                 <div class="stat-value" th:text="${totalDoctors}">15</div>
@@ -93,6 +165,48 @@
     <!-- Alerts Fragment -->
     <div th:replace="~{fragments/alert :: alerts}"></div>
 
+    <!-- 4 Pillars of CuraTransit -->
+    <section style="margin-bottom: 48px;">
+        <div class="section-header" style="text-align: center;">
+            <h2 class="section-title">Designed for Patients &amp; Travelling Families</h2>
+            <p class="section-subtitle">Comprehensive hospital intelligence and transit coordination for outstation arrivals</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+            <div class="pillar-card">
+                <div class="pillar-icon">🏥</div>
+                <h3 class="pillar-title">Smart Hospital Discovery</h3>
+                <p class="pillar-desc">
+                    Explore multi-specialty hospitals with complete department coverage, consultant doctor profiles, and real-time OPD appointment slots.
+                </p>
+            </div>
+
+            <div class="pillar-card">
+                <div class="pillar-icon">🚨</div>
+                <h3 class="pillar-title">Emergency &amp; ICU Filters</h3>
+                <p class="pillar-desc">
+                    Quickly filter healthcare facilities with verified 24x7 trauma care and intensive care units with bed capacity metrics.
+                </p>
+            </div>
+
+            <div class="pillar-card">
+                <div class="pillar-icon">🚆</div>
+                <h3 class="pillar-title">Medical Transit Guidance</h3>
+                <p class="pillar-desc">
+                    Proximity details to major Tamil Nadu railway junctions, international/domestic airports, and bus stands, plus attendant lodging guidance.
+                </p>
+            </div>
+
+            <div class="pillar-card">
+                <div class="pillar-icon">♿</div>
+                <h3 class="pillar-title">Accessibility &amp; Language</h3>
+                <p class="pillar-desc">
+                    Request wheelchair support upon arrival and language coordination (Tamil, English, Telugu, Hindi, Malayalam, Kannada).
+                </p>
+            </div>
+        </div>
+    </section>
+
     <!-- Quick Specialties Navigation -->
     <section style="margin-bottom: 48px;">
         <div class="section-header">
@@ -112,14 +226,17 @@
         </div>
     </section>
 
-    <!-- Featured Fictional Demo Hospitals -->
+    <!-- Featured Hospitals with Transit Badges -->
     <section style="margin-bottom: 56px;">
-        <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
+        <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 8px;">
             <div>
-                <h2 class="section-title">Featured Demo Hospitals</h2>
-                <p class="section-subtitle">Sample healthcare centers located in Tamil Nadu with active consultation slots</p>
+                <h2 class="section-title">Featured Hospitals Across Tamil Nadu</h2>
+                <p class="section-subtitle">Sample healthcare centers located in major transit hubs with active consultation slots</p>
             </div>
-            <a th:href="@{/hospitals}" class="btn btn-outline-primary btn-sm">View All Hospitals &rarr;</a>
+            <div style="display: flex; gap: 8px;">
+                <a th:href="@{/hospitals/compare(ids='1,2')}" class="btn btn-outline btn-sm">⚖️ Compare Samples</a>
+                <a th:href="@{/hospitals}" class="btn btn-outline-primary btn-sm">View All Hospitals &rarr;</a>
+            </div>
         </div>
 
         <div class="cards-grid">
@@ -135,23 +252,33 @@
                     <span th:text="${hospital.city} + ', ' + ${hospital.district} + ', Tamil Nadu'">Chennai, Tamil Nadu</span>
                 </div>
 
-                <p style="font-size: 0.875rem; color: var(--text-muted); margin: 12px 0;" th:text="${hospital.description}">
-                    A fictional premier multi-specialty healthcare centre in Chennai.
-                </p>
+                <!-- Emergency & ICU Badges -->
+                <div style="display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0;">
+                    <span th:if="${hospital.hasEmergencyServices}" class="badge" style="background: #fee2e2; color: #dc2626; font-weight: 700;">🚨 24x7 Emergency</span>
+                    <span th:if="${hospital.hasIcu}" class="badge" style="background: #e0f2fe; color: #0369a1; font-weight: 700;">
+                        🛏️ <span th:text="${hospital.icuBedsAvailable}">10</span> ICU Beds
+                    </span>
+                    <span th:if="${hospital.wheelchairAccessible}" class="badge badge-green">♿ Wheelchair</span>
+                </div>
+
+                <!-- Transit Highlight -->
+                <div style="font-size: 0.8rem; color: var(--text-muted); background: var(--bg-muted); padding: 8px 12px; border-radius: var(--radius-sm); margin-bottom: 12px;">
+                    🚆 <strong>Transit:</strong> <span th:text="${hospital.nearestRailwayStation}">Central (5 km)</span>
+                </div>
 
                 <!-- Sample Departments -->
                 <div class="department-tags">
                     <span th:each="dept, iter : ${hospital.getDepartmentList()}"
-                          th:if="${iter.index < 4}"
+                          th:if="${iter.index < 3}"
                           class="dept-pill"
                           th:text="${dept}">General Medicine</span>
-                    <span th:if="${hospital.getDepartmentList().size() > 4}" class="dept-pill"
-                          th:text="'+' + (${hospital.getDepartmentList().size()} - 4) + ' more'">+2 more</span>
+                    <span th:if="${hospital.getDepartmentList().size() > 3}" class="dept-pill"
+                          th:text="'+' + (${hospital.getDepartmentList().size()} - 3) + ' more'">+2 more</span>
                 </div>
 
                 <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 16px;">
-                    <span style="font-size: 0.85rem; color: var(--text-muted);">Sample Address available</span>
-                    <a th:href="@{'/hospitals/' + ${hospital.id}}" class="btn btn-primary btn-sm">View Hospital &rarr;</a>
+                    <a th:href="@{'/hospitals/compare?ids=' + ${hospital.id}}" style="font-size: 0.85rem; color: var(--primary); font-weight: 600;">⚖️ Compare</a>
+                    <a th:href="@{'/hospitals/' + ${hospital.id}}" class="btn btn-primary btn-sm">View Details &rarr;</a>
                 </div>
             </div>
         </div>
@@ -160,8 +287,8 @@
     <!-- Three-Step "How It Works" Section -->
     <section style="margin-bottom: 56px;">
         <div class="section-header" style="text-align: center;">
-            <h2 class="section-title">How It Works</h2>
-            <p class="section-subtitle">Book a demo healthcare appointment across Tamil Nadu in 3 simple steps</p>
+            <h2 class="section-title">How CuraTransit Works</h2>
+            <p class="section-subtitle">Locate care, compare facilities, and book a demo appointment in 3 easy steps</p>
         </div>
 
         <div class="steps-grid">
@@ -169,23 +296,23 @@
                 <div class="step-num">1</div>
                 <h3 class="step-title">Search &amp; Filter</h3>
                 <p class="step-desc">
-                    Select your Tamil Nadu district, city or town, and medical specialty to discover relevant sample hospitals.
+                    Filter by district, specialty, emergency services, or ICU bed capacity to find appropriate facilities.
                 </p>
             </div>
 
             <div class="step-card">
                 <div class="step-num">2</div>
-                <h3 class="step-title">Choose a Doctor</h3>
+                <h3 class="step-title">Compare &amp; Plan Transit</h3>
                 <p class="step-desc">
-                    View doctor credentials, languages spoken, and real-time demonstration availability slots.
+                    Compare hospitals side-by-side and review nearest railway stations, airports, and family lodging guidance.
                 </p>
             </div>
 
             <div class="step-card">
                 <div class="step-num">3</div>
-                <h3 class="step-title">Book an Appointment</h3>
+                <h3 class="step-title">Book with Assistance</h3>
                 <p class="step-desc">
-                    Confirm your slot with patient details and receive an immediate reference token for your demo visit.
+                    Select a specialist doctor slot, request wheelchair or language support, and get an instant confirmation reference with SMS alerts.
                 </p>
             </div>
         </div>
@@ -201,7 +328,7 @@
                 </h3>
                 <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;">
                     This application is a <strong>demonstration prototype</strong> developed for the Tamil Nadu healthcare technology evaluation.
-                    All hospital listings, doctor names, OPD schedules, and appointment availability are purely sample fictional records.
+                    All hospital listings, doctor names, OPD schedules, ICU metrics, and appointment availability are purely sample fictional records.
                     No real health records, payment details, or government identity numbers are collected.
                 </p>
             </div>
@@ -215,4 +342,3 @@
 <script th:src="@{/js/app.js}"></script>
 </body>
 </html>
-

@@ -94,6 +94,11 @@
                         <td>
                             <div th:text="${appt.hospital.name}">Demo Hospital</div>
                             <div style="font-size: 0.8rem; color: var(--text-muted);" th:text="${appt.hospital.district}">Chennai</div>
+                            <div th:if="${appt.needsWheelchair or appt.needsLanguageSupport or appt.outstationPatient}" style="display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px;">
+                                <span th:if="${appt.needsWheelchair}" class="badge badge-green" style="font-size: 0.65rem;">♿ Wheelchair</span>
+                                <span th:if="${appt.needsLanguageSupport}" class="badge badge-blue" style="font-size: 0.65rem;">🗣️ <span th:text="${appt.preferredLanguage}">Tamil</span></span>
+                                <span th:if="${appt.outstationPatient}" class="badge badge-teal" style="font-size: 0.65rem;">🚆 Outstation</span>
+                            </div>
                         </td>
                         <td>
                             <div style="font-weight: 600;" th:text="${appt.getFormattedDate()}">31 Oct 2026</div>

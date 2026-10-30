@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: curatransit
+    runtime: java
+    plan: free
+    region: oregon
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar target/curatransit-1.0.0.jar
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: JAVA_VERSION
+        value: 17
+      - key: TEXTBEE_ENABLED
+        value: false
+      - key: TEXTBEE_API_KEY
+        sync: false
+      - key: TEXTBEE_DEVICE_ID
+        sync: false
+

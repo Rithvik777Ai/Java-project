@@ -1,5 +1,5 @@
 /**
- * Tamil Nadu Smart Hospital - Interactive Client JavaScript
+ * CuraTransit - Smart Hospital Finder & Medical Transit JavaScript
  */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -83,5 +83,82 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-});
 
+    // 7. Interactive Floating Compare Bar
+    const compareCheckboxes = document.querySelectorAll('.compare-checkbox');
+    const floatingBar = document.getElementById('floatingCompareBar');
+    const compareCountText = document.getElementById('compareCountText');
+    const compareGoBtn = document.getElementById('compareGoBtn');
+    const compareClearBtn = document.getElementById('compareClearBtn');
+
+    if (compareCheckboxes.length > 0 && floatingBar) {
+        function updateCompareBar() {
+            const checkedBoxes = Array.from(compareCheckboxes).filter(cb => cb.checked);
+            const count = checkedBoxes.length;
+
+            if (count > 0) {
+                floatingBar.style.display = 'flex';
+                if (count === 1) {
+                    compareCountText.textContent = '1 hospital selected (select at least 2)';
+                    compareGoBtn.disabled = true;
+                    compareGoBtn.style.opacity = '0.6';
+                    compareGoBtn.style.cursor = 'not-allowed';
+                } else if (count > 4) {
+                    compareCountText.textContent = count + ' hospitals (max 4 allowed)';
+                    compareGoBtn.disabled = true;
+                    compareGoBtn.style.opacity = '0.6';
+                    compareGoBtn.style.cursor = 'not-allowed';
+                } else {
+                    compareCountText.textContent = count + ' hospitals selected';
+                    compareGoBtn.disabled = false;
+                    compareGoBtn.style.opacity = '1';
+                    compareGoBtn.style.cursor = 'pointer';
+                }
+            } else {
+                floatingBar.style.display = 'none';
+            }
+        }
+
+        compareCheckboxes.forEach(cb => {
+            cb.addEventListener('change', updateCompareBar);
+        });
+
+        if (compareGoBtn) {
+            compareGoBtn.addEventListener('click', function () {
+                const checkedBoxes = Array.from(compareCheckboxes).filter(cb => cb.checked);
+                const ids = checkedBoxes.map(cb => cb.value).join(',');
+                if (ids) {
+                    window.location.href = '/hospitals/compare?ids=' + encodeURIComponent(ids);
+                }
+            });
+        }
+
+        if (compareClearBtn) {
+            compareClearBtn.addEventListener('click', function () {
+                compareCheckboxes.forEach(cb => { cb.checked = false; });
+                floatingBar.style.display = 'none';
+            });
+        }
+    }
+
+    // 8. Outstation Travel & Accessibility Dynamic Form Toggles
+    const outstationCheckbox = document.getElementById('outstationCheckbox');
+    const originGroup = document.getElementById('originGroup');
+    if (outstationCheckbox && originGroup) {
+        outstationCheckbox.addEventListener('change', function () {
+            originGroup.style.display = this.checked ? 'block' : 'none';
+            if (this.checked) {
+                const input = originGroup.querySelector('input');
+                if (input) input.focus();
+            }
+        });
+    }
+
+    const languageCheckbox = document.getElementById('languageCheckbox');
+    const languageGroup = document.getElementById('languageGroup');
+    if (languageCheckbox && languageGroup) {
+        languageCheckbox.addEventListener('change', function () {
+            languageGroup.style.display = this.checked ? 'block' : 'none';
+        });
+    }
+});

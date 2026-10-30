@@ -30,6 +30,7 @@ public class SecurityConfig {
                     "/login",
                     "/register",
                     "/demo-login",
+                    "/api/**",
                     "/css/**",
                     "/js/**",
                     "/images/**",
@@ -58,7 +59,7 @@ public class SecurityConfig {
                 .addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
             )
             .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/h2-console/**", "/demo-login")
+                .ignoringRequestMatchers("/h2-console/**", "/demo-login", "/api/**")
             );
 
         return http.build();

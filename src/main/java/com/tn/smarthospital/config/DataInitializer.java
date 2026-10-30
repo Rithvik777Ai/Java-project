@@ -226,6 +226,52 @@ public class DataInitializer implements CommandLineRunner {
                 "Fictional high-altitude community healthcare clinic serving demo residents in the Nilgiris."
         ));
 
+        // Configure CuraTransit Medical Travel, Emergency, and ICU Facilities for all hospitals
+        for (int i = 0; i < hospitals.size(); i++) {
+            Hospital h = hospitals.get(i);
+            h.setHasEmergencyServices(true);
+            h.setHasIcu(true);
+            h.setWheelchairAccessible(true);
+            h.setLanguagesSupported("Tamil, English, Hindi, Telugu, Malayalam");
+
+            if ("Chennai".equalsIgnoreCase(h.getDistrict())) {
+                h.setIcuBedsAvailable(18 + (i * 2));
+                h.setNearestRailwayStation("Chennai Central (MGR) / Egmore - 4.2 km");
+                h.setNearestAirport("Chennai International Airport (MAA) - 9.5 km");
+                h.setNearestBusStand("Koyambedu CMBT / Kilambakkam KCBT - 6.0 km");
+                h.setLodgingGuidance("Verified patient transit lodges & dormitories within 500m (₹350 - ₹900/night)");
+                h.setTransitHelpDeskPhone("044-2200-9999 (24x7 CuraTransit Desk)");
+            } else if ("Coimbatore".equalsIgnoreCase(h.getDistrict())) {
+                h.setIcuBedsAvailable(14 + (i * 2));
+                h.setNearestRailwayStation("Coimbatore Junction (CBE) - 3.5 km");
+                h.setNearestAirport("Coimbatore International Airport (CJB) - 6.2 km");
+                h.setNearestBusStand("Gandhipuram Central Bus Stand - 2.1 km");
+                h.setLodgingGuidance("Affordable patient guest houses & dormitories on Avinashi Road (₹300 - ₹800/night)");
+                h.setTransitHelpDeskPhone("0422-220-9999 (CuraTransit Outstation Desk)");
+            } else if ("Madurai".equalsIgnoreCase(h.getDistrict())) {
+                h.setIcuBedsAvailable(16);
+                h.setNearestRailwayStation("Madurai Junction (MDU) - 3.0 km");
+                h.setNearestAirport("Madurai International Airport (IXM) - 11.5 km");
+                h.setNearestBusStand("Mattuthavani Integrated Bus Terminus - 2.8 km");
+                h.setLodgingGuidance("Patient rest shelters & dharmashalas near Alagar Kovil Road");
+                h.setTransitHelpDeskPhone("0452-220-9999 (Southern Districts Transit Desk)");
+            } else if ("Tiruchirappalli".equalsIgnoreCase(h.getDistrict())) {
+                h.setIcuBedsAvailable(12);
+                h.setNearestRailwayStation("Tiruchirappalli Junction (TPJ) - 4.0 km");
+                h.setNearestAirport("Tiruchirappalli International Airport (TRZ) - 8.0 km");
+                h.setNearestBusStand("Central Bus Stand (Cantonment) - 3.2 km");
+                h.setLodgingGuidance("Transit dormitories & family stay rooms in Thillai Nagar");
+                h.setTransitHelpDeskPhone("0431-220-9999 (Delta Region Transit Desk)");
+            } else {
+                h.setIcuBedsAvailable(10);
+                h.setNearestRailwayStation(h.getCity() + " Railway Station - 2.5 km");
+                h.setNearestAirport("Nearest Regional Airport (" + h.getDistrict() + " Zone)");
+                h.setNearestBusStand(h.getCity() + " Central Bus Station - 1.8 km");
+                h.setLodgingGuidance("Patient transit rooms and guest houses within 1 km");
+                h.setTransitHelpDeskPhone("1800-425-0000 (CuraTransit Statewide Helpline)");
+            }
+        }
+
         hospitalRepository.saveAll(hospitals);
 
         // 3. Create Seeded Doctors

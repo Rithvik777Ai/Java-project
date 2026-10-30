@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Hospitals - CuraTransit</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .compare-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 24px;
+            background: white;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        .compare-table th, .compare-table td {
+            padding: 16px 20px;
+            vertical-align: top;
+            border-bottom: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+        }
+        .compare-table th:last-child, .compare-table td:last-child {
+            border-right: none;
+        }
+        .compare-table tr:last-child td {
+            border-bottom: none;
+        }
+        .feature-col {
+            width: 240px;
+            background: #f8fafc;
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+        .hospital-col {
+            min-width: 260px;
+            background: white;
+        }
+        .compare-badge-yes {
+            background: #dcfce7;
+            color: #15803d;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            display: inline-block;
+            font-size: 0.85rem;
+        }
+        .compare-badge-no {
+            background: #f1f5f9;
+            color: #64748b;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            display: inline-block;
+            font-size: 0.85rem;
+        }
+        .hub-tag {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        .hub-icon {
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="container">
+    <div th:replace="~{fragments/alert :: alerts}"></div>
+
+    <!-- Breadcrumb & Demo Banner -->
+    <div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <div style="font-size: 0.9rem; color: var(--text-muted);">
+            <a th:href="@{/hospitals}">&larr; Back to Hospital Search</a> /
+            <span>Compare Hospitals</span>
+        </div>
+        <span class="badge badge-demo">Demo Comparison Tool</span>
+    </div>
+
+    <div class="section-header">
+        <h1 class="section-title">Side-by-Side Hospital &amp; Transit Comparison</h1>
+        <p class="section-subtitle">Evaluate emergency services, ICU capacity, railway/airport transit hubs, and accessibility side-by-side</p>
+    </div>
+
+    <!-- Selection Bar -->
+    <div class="card" style="padding: 24px; margin-bottom: 32px; background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%);">
+        <form th:action="@{/hospitals/compare}" method="get" id="compareForm">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; color: var(--text-main);">
+                Select 2 to 4 Hospitals to Compare
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 16px;">
+                <div>
+                    <label class="form-label">Hospital 1</label>
+                    <select name="ids" class="form-control">
+                        <option value="">-- Choose Hospital 1 --</option>
+                        <option th:each="h : ${allHospitals}" th:value="${h.id}"
+                                th:text="${h.name} + ' (' + ${h.district} + ')'"
+                                th:selected="${selectedIds != null and selectedIds.size() > 0 and selectedIds[0] == h.id}">Hospital</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label">Hospital 2</label>
+                    <select name="ids" class="form-control">
+                        <option value="">-- Choose Hospital 2 --</option>
+                        <option th:each="h : ${allHospitals}" th:value="${h.id}"
+                                th:text="${h.name} + ' (' + ${h.district} + ')'"
+                                th:selected="${selectedIds != null and selectedIds.size() > 1 and selectedIds[1] == h.id}">Hospital</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label">Hospital 3 (Optional)</label>
+                    <select name="ids" class="form-control">
+                        <option value="">-- Choose Hospital 3 --</option>
+                        <option th:each="h : ${allHospitals}" th:value="${h.id}"
+                                th:text="${h.name} + ' (' + ${h.district} + ')'"
+                                th:selected="${selectedIds != null and selectedIds.size() > 2 and selectedIds[2] == h.id}">Hospital</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label">Hospital 4 (Optional)</label>
+                    <select name="ids" class="form-control">
+                        <option value="">-- Choose Hospital 4 --</option>
+                        <option th:each="h : ${allHospitals}" th:value="${h.id}"
+                                th:text="${h.name} + ' (' + ${h.district} + ')'"
+                                th:selected="${selectedIds != null and selectedIds.size() > 3 and selectedIds[3] == h.id}">Hospital</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-end; align-items: center;">
+                <a th:href="@{/hospitals/compare(ids='1,2')}" class="btn btn-outline btn-sm">Sample Comparison (Chennai vs Coimbatore)</a>
+                <button type="submit" class="btn btn-primary btn-sm">⚖️ Compare Now</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Comparison Table -->
+    <div th:if="${not #lists.isEmpty(comparedHospitals)}" style="overflow-x: auto; margin-bottom: 40px;">
+        <table class="compare-table">
+            <thead>
+                <tr>
+                    <th class="feature-col">Feature / Metric</th>
+                    <th th:each="h : ${comparedHospitals}" class="hospital-col">
+                        <div class="card-header-flex" style="margin-bottom: 8px;">
+                            <span class="badge badge-demo">Sample Listing</span>
+                            <span class="badge badge-teal" th:text="${h.hospitalType}">Multi-Specialty</span>
+                        </div>
+                        <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-bottom: 4px;" th:text="${h.name}">Hospital Name</h2>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">
+                            📍 <span th:text="${h.city} + ', ' + ${h.district}">Chennai</span>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            <a th:href="@{'/hospitals/' + ${h.id}}" class="btn btn-primary btn-sm" style="width: 100%;">View Details &amp; OPD &rarr;</a>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Emergency Services -->
+                <tr>
+                    <td class="feature-col">
+                        🚨 Emergency Care (24x7)
+                        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Trauma &amp; round-the-clock casualty</div>
+                    </td>
+                    <td th:each="h : ${comparedHospitals}">
+                        <div th:if="${h.hasEmergencyServices}">
+                            <span class="compare-badge-yes">✓ 24x7 Emergency Services</span>
+                            <div style="font-size: 0.8rem; color: #166534; margin-top: 4px;">Rapid triage &amp; trauma response active</div>
+                        </div>
+                        <div th:unless="${h.hasEmergencyServices}">
+                            <span class="compare-badge-no">✕ Daytime OPD Only</span>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- ICU Capacity -->
+                <tr>
+                    <td class="feature-col">
+                        🛏️ Intensive Care Unit (ICU)
+                        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Ventilator and critical bed units</div>
+                    </td>
+                    <td th:each="h : ${comparedHospitals}">
+                        <div th:if="${h.hasIcu}">
+                            <span class="badge badge-teal" style="font-size: 0.95rem; font-weight: 700;">
+                                <span th:text="${h.icuBedsAvailable}">10</span> Demo ICU Beds
+                            </span>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Advanced monitoring facilities</div>
+                        </div>
+                        <div th:unless="${h.hasIcu}">
+                            <span class="compare-badge-no">No Dedicated ICU</span>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Wheelchair & Accessibility -->
+                <tr>
+                    <td class="feature-col">
+                        ♿ Accessibility &amp; Ramps
+                        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Lifts, ramps, and mobility support</div>
+                    </td>
+                    <td th:each="h : ${comparedHospitals}">
+                        <span th:if="${h.wheelchairAccessible}" class="compare-badge-yes">✓ Full Wheelchair Access</span>
+                        <span th:unless="${h.wheelchairAccessible}" class="compare-badge-no">Partial Access</span>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Entry ramp and elevator assistance available</div>
+                    </td>
+                </tr>
+
+                <!-- Medical Transit Hubs -->
+                <tr>
+                    <td class="feature-col">
+                        🚆 Medical Transit &amp; Proximity
+                        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">For patients arriving from other districts</div>
+                    </td>
+                    <td th:each="h : ${comparedHospitals}">
+                        <div class="hub-tag">
+                            <span class="hub-icon">🚆</span>
+                            <div>
+                                <strong style="color: var(--text-main);">Railway:</strong>
+                                <span th:text="${h.nearestRailwayStation}">Central (5 km)</span>
+                            </div>
+                        </div>
+                        <div class="hub-tag">
+                            <span class="hub-icon">✈️</span>
+                            <div>
+                                <strong style="color: var(--text-main);">Airport:</strong>
+                                <span th:text="${h.nearestAirport}">Airport (18 km)</span>
+                            </div>
+                        </div>
+                        <div class="hub-tag">
+                            <span class="hub-icon">🚌</span>
+                            <div>
+                                <strong style="color: var(--text-main);">Bus Stand:</strong>
+                                <span th:text="${h.nearestBusStand}">CMBT (8 km)</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Lodging Guidance -->
+                <tr>
+                    <td class="feature-col">
+                        🏨 Attendant Lodging Guidance
+                        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Stay options for patient companions</div>
+                    </td>
+                    <td th:each="h : ${comparedHospitals}">
+                        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;" th:text="${h.lodgingGuidance}">
+                            Budget guest houses and dormitories available within 1 km.
+                        </p>
+                    </td>
+                </tr>
+
+                <!-- Languages Supported -->
+                <tr>
+                    <td class="feature-col">
+                        🗣️ Languages Supported
+                        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Staff &amp; interpreter languages</div>
+                    </td>
+                    <td th:each="h : ${comparedHospitals}">
+                        <div style="font-weight: 600; color: var(--primary); font-size: 0.9rem;" th:text="${h.languagesSupported}">
+                            Tamil, English, Telugu
+                        </div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Language coordinator desk on call</div>
+                    </td>
+                </tr>
+
+                <!-- Transit Help Desk Phone -->
+                <tr>
+                    <td class="feature-col">
+                        📞 Transit Coordinator Helpline
+                        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Patient transit desk support</div>
+                    </td>
+                    <td th:each="h : ${comparedHospitals}">
+                        <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;" th:text="${h.transitHelpDeskPhone}">
+                            044-25305111
+                        </div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Demo helpline for outstation arrivals</div>
+                    </td>
+                </tr>
+
+                <!-- Specialists & OPD -->
+                <tr>
+                    <td class="feature-col">
+                        🩺 Doctors &amp; Departments
+                    </td>
+                    <td th:each="h : ${comparedHospitals}">
+                        <div style="font-weight: 700; color: var(--text-main); margin-bottom: 4px;">
+                            <span th:text="${h.doctors.size()}">0</span> Active Demo Practitioners
+                        </div>
+                        <div class="department-tags">
+                            <span th:each="d, i : ${h.getDepartmentList()}" th:if="${i.index < 3}" class="dept-pill" th:text="${d}">Cardiology</span>
+                            <span th:if="${h.getDepartmentList().size() > 3}" class="dept-pill" th:text="'+' + (${h.getDepartmentList().size()} - 3)">+2</span>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Action Row -->
+                <tr>
+                    <td class="feature-col">Book Appointment</td>
+                    <td th:each="h : ${comparedHospitals}">
+                        <a th:href="@{'/hospitals/' + ${h.id}}" class="btn btn-primary btn-sm" style="width: 100%;">
+                            Select Doctor at <span th:text="${h.city}">City</span> &rarr;
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Empty State -->
+    <div th:if="${#lists.isEmpty(comparedHospitals)}" class="card" style="text-align: center; padding: 48px 24px;">
+        <span style="font-size: 3rem;">⚖️</span>
+        <h3 style="font-size: 1.35rem; font-weight: 700; margin: 12px 0 6px;">No hospitals selected for comparison</h3>
+        <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 24px;">
+            Please select at least 2 hospitals in the dropdowns above or select hospitals from the hospital search listing to compare their facilities side-by-side.
+        </p>
+        <a th:href="@{/hospitals/compare(ids='1,2')}" class="btn btn-primary">Try Sample Comparison (Demo Hospitals)</a>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>
+

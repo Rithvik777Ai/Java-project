@@ -19,6 +19,7 @@ public class Appointment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"password", "hibernateLazyInitializer", "handler"})
     private User patient;
 
     @Column(nullable = false)
@@ -31,14 +32,17 @@ public class Appointment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"slots", "hibernateLazyInitializer", "handler"})
     private Doctor doctor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hospital_id", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"doctors", "hibernateLazyInitializer", "handler"})
     private Hospital hospital;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "slot_id", nullable = false, unique = true)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"doctor", "hibernateLazyInitializer", "handler"})
     private AvailabilitySlot slot;
 
     @Column(nullable = false)
@@ -70,6 +74,22 @@ public class Appointment {
 
     @Column(nullable = false)
     private boolean smsNotificationSent = false;
+
+    // CuraTransit Medical Travel Assistance
+    @Column(nullable = false)
+    private boolean needsWheelchair = false;
+
+    @Column(nullable = false)
+    private boolean needsLanguageSupport = false;
+
+    @Column(length = 50)
+    private String preferredLanguage;
+
+    @Column(nullable = false)
+    private boolean isOutstationPatient = false;
+
+    @Column(length = 100)
+    private String travelOrigin;
 
     public Appointment() {
     }
@@ -251,6 +271,46 @@ public class Appointment {
 
     public void setSmsNotificationSent(boolean smsNotificationSent) {
         this.smsNotificationSent = smsNotificationSent;
+    }
+
+    public boolean isNeedsWheelchair() {
+        return needsWheelchair;
+    }
+
+    public void setNeedsWheelchair(boolean needsWheelchair) {
+        this.needsWheelchair = needsWheelchair;
+    }
+
+    public boolean isNeedsLanguageSupport() {
+        return needsLanguageSupport;
+    }
+
+    public void setNeedsLanguageSupport(boolean needsLanguageSupport) {
+        this.needsLanguageSupport = needsLanguageSupport;
+    }
+
+    public String getPreferredLanguage() {
+        return preferredLanguage;
+    }
+
+    public void setPreferredLanguage(String preferredLanguage) {
+        this.preferredLanguage = preferredLanguage;
+    }
+
+    public boolean isOutstationPatient() {
+        return isOutstationPatient;
+    }
+
+    public void setOutstationPatient(boolean outstationPatient) {
+        isOutstationPatient = outstationPatient;
+    }
+
+    public String getTravelOrigin() {
+        return travelOrigin;
+    }
+
+    public void setTravelOrigin(String travelOrigin) {
+        this.travelOrigin = travelOrigin;
     }
 }
 

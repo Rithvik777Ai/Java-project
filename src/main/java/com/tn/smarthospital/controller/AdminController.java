@@ -106,6 +106,16 @@ public class AdminController {
         form.setDepartments(hospital.getDepartments());
         form.setDescription(hospital.getDescription());
         form.setActive(hospital.isActive());
+        form.setHasEmergencyServices(hospital.isHasEmergencyServices());
+        form.setHasIcu(hospital.isHasIcu());
+        form.setIcuBedsAvailable(hospital.getIcuBedsAvailable());
+        form.setWheelchairAccessible(hospital.isWheelchairAccessible());
+        form.setLanguagesSupported(hospital.getLanguagesSupported());
+        form.setNearestRailwayStation(hospital.getNearestRailwayStation());
+        form.setNearestAirport(hospital.getNearestAirport());
+        form.setNearestBusStand(hospital.getNearestBusStand());
+        form.setLodgingGuidance(hospital.getLodgingGuidance());
+        form.setTransitHelpDeskPhone(hospital.getTransitHelpDeskPhone());
 
         model.addAttribute("hospitalForm", form);
         model.addAttribute("districts", hospitalService.getAllDistricts());

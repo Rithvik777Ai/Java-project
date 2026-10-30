@@ -1,11 +1,14 @@
-# Tamil Nadu Smart Hospital (தமிழ்நாடு ஸ்மார்ட் மருத்துவமனை)
+# CuraTransit – Smart Hospital Finder & Medical Transit System
+### (தமிழ்நாடு ஸ்மார்ட் மருத்துவமனை மற்றும் மருத்துவப் பயண வழிகாட்டி)
 
-A complete, responsive Java web application for discovering hospitals and doctors and booking demo appointments across **Tamil Nadu, India**. Built with **Spring Boot 3**, **Spring Data JPA**, **Thymeleaf**, **Spring Security**, and an embedded **H2 database**.
+A full-stack, responsive Java web application for finding hospitals and doctors, comparing critical care and emergency capacity, accessing outstation patient travel assistance, and booking demo appointments across **Tamil Nadu, India**.
+
+Built with **Java 17**, **Spring Boot 3.3**, **Spring MVC**, **Thymeleaf**, **Spring Data JPA**, **Spring Security**, and an embedded **H2 database** with zero external frontend runtime dependencies (HTML, CSS, vanilla browser JavaScript only). Fully pre-configured for free cloud deployment on **Render**.
 
 ---
 
 ## ⚠️ Important Demo Notice & Safety Principles
-> **Demo website. Hospital listings and appointment availability are sample data and must be verified directly with the hospital.**
+> **Demo website. Hospital listings, transit directions, ICU capacity, and appointment availability are sample data and must be verified directly with the hospital.**
 - **No Real Medical Records:** In compliance with healthcare privacy regulations, medical history, clinical diagnoses, and prescriptions are neither collected nor stored.
 - **No Sensitive Identifiers:** No government identification numbers (Aadhaar, Voter ID, PAN) or payment details (UPI/Credit Cards) are requested.
 - **Fictional Seeded Data:** All hospital names (e.g., *"Demo City General Hospital"*, *"Sample Care Centre"*), doctor profiles, and time slots are synthetic demonstration records.
@@ -13,25 +16,42 @@ A complete, responsive Java web application for discovering hospitals and doctor
 
 ---
 
-## 🌟 Key Features
+## 🌟 Key Features of CuraTransit
 
-### 1. Patient Portal & Discovery
-- **Statewide Search:** Search and filter sample medical facilities across all 38 districts of Tamil Nadu (Chennai, Coimbatore, Madurai, Tiruchirappalli, Salem, Tirunelveli, Vellore, Thanjavur, etc.).
-- **Specialty Directory:** Quick access to common medical departments: Cardiology, General Medicine, Orthopedics, Pediatrics, Neurology, Dermatology, Gastroenterology, and Ophthalmology.
-- **Doctor Profiles & Real-time Slots:** Inspect credentials, languages spoken (Tamil, English), consultation mode, and selectable morning and evening demo slots.
-- **Demo Booking & Slip:** Concurrency-checked appointment booking with a unique reference code (`TNSH-YYYYMMDD-XXXX`), inline validation, printable demo slip, and cancellation support.
-- **Patient Dashboard:** View active and past demo visits, real-time simulation alerts, and a transparent records section clearly indicating no medical charts are kept.
+### 1. Hospital Discovery, Filtering & Sorting
+- **Statewide Coverage:** Search hospitals across all 38 districts of Tamil Nadu (Chennai, Coimbatore, Madurai, Tiruchirappalli, Salem, Tirunelveli, Vellore, Thanjavur, etc.).
+- **Keyword & Department Search:** Search by facility name, address keywords, or medical specialty.
+- **🚨 24x7 Emergency Filter:** Instant one-click filter for hospitals equipped with 24x7 trauma care and casualty services.
+- **🛏️ ICU Bed Availability Filter:** Filter hospitals with active Intensive Care Units and see available bed capacity metrics.
+- **Multi-Criteria Sorting:** Sort facilities dynamically by Hospital Name (A-Z), District, ICU Bed Capacity (High to Low), or Doctor Count.
 
-### 2. Doctor Portal
-- **Consultation Queue:** View booked demo appointments, patient names, and contact numbers.
-- **Status Updates:** Mark demo appointments as **Completed** or **Cancelled** (which automatically reopens the time slot for other patients).
-- **Slot Management:** Create custom time slots for any date, delete unbooked slots, or trigger an instant 7-day slot generation.
+### 2. ⚖️ Side-by-Side Hospital Comparison Matrix
+- **Compare 2 to 4 Hospitals:** Select hospitals from the list or via dedicated comparison selectors.
+- **Interactive Comparison Table (`/hospitals/compare`):**
+  - Emergency 24x7 availability and trauma triage
+  - ICU bed capacity and critical monitoring units
+  - Wheelchair accessibility, entrance ramps, and elevators
+  - Proximity to nearest Railway Stations, Airports, and Bus Stands
+  - Patient attendant lodging & guest house guidance
+  - Multilingual staff support & language coordination
+  - Transit help desk phone lines
+  - Associated doctor counts and active OPD departments
 
-### 3. State Health Administration Console
-- **System Metrics:** Live overview of total hospitals, specialist doctors, total bookings, and registered users.
-- **Audit Table:** Filter appointments across Tamil Nadu by specific date, hospital, doctor, or status (CONFIRMED, COMPLETED, CANCELLED).
-- **Listing Management:** Add, edit, or activate/deactivate fictional hospital and doctor profiles.
-- **Batch Slot Generator:** Quickly seed 7 to 30 days of standard 30-minute consultation slots for any doctor.
+### 3. 🚆 Medical Travel Assistance for Outstation Patients
+- **Transit Hub Mapping:** Every hospital details page features verified distances and transit instructions from nearest railway junctions (e.g., Chennai Central, Coimbatore Junction), airports (e.g., MAA, CJB, IXM, TRZ), and central bus terminals (CMBT, Mattuthavani, Gandhipuram).
+- **Lodging Guidance:** Budget guest house, lodge, and family dormitory recommendations for attendants accompanying patients from other districts or states.
+- **Dedicated Transit Help Desk:** Direct simulated telephone coordination contact numbers.
+
+### 4. ♿ Accessibility & Multilingual Support
+- **Wheelchair Assistance:** Request wheelchair support at hospital arrival during appointment booking.
+- **Language Coordinator Request:** Outstation patients can request on-site translators / interpreters for **Tamil, English, Telugu, Hindi, Malayalam, or Kannada**.
+
+### 5. Specialist Doctor Directory & OPD Booking
+- **Doctor Profiles:** Qualifications, clinical experience, spoken languages, and demonstration OPD chamber numbers.
+- **Real-Time Slot Engine:** Morning and afternoon time slots with concurrency double-booking prevention.
+- **Demo Booking Reference:** Generates instant verifiable reference codes (`TNSH-YYYYMMDD-XXXX`).
+- **Printable Slip:** Clean printable patient consultation slip with QR/reference tokens and full hospital transit instructions.
+- **Patient Dashboard (`/patient/dashboard`):** View upcoming demo visits, review requested transit assistance, cancel reservations, or view previous appointment slips.
 
 ---
 
@@ -49,178 +69,196 @@ On the `/login` page, you can either click the **1-Click Quick Demo Login** butt
 
 ---
 
-## 🚀 Running the Application Locally
+## 🌐 Complete REST API Endpoints
 
-### Prerequisites
-- **Java Development Kit (JDK):** Version 17, 21, or 26.
-- **Maven:** Apache Maven 3.9+ (An embedded Maven 3.9.6 wrapper `mvnw.cmd` / `mvnw` is included in the project root).
+CuraTransit provides clean JSON REST APIs for mobile applications and third-party healthcare aggregators:
 
-### 1. Build and Run
-From the project directory, run:
+### Hospital APIs
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/hospitals` | Search & filter hospitals (`?district=...&hasEmergency=true&hasIcu=true&sortBy=...`) |
+| `GET` | `/api/hospitals/{id}` | Get single hospital details |
+| `GET` | `/api/hospitals/compare?ids=1,2` | Side-by-side comparison for 2 to 4 hospitals |
+| `GET` | `/api/hospitals/{id}/transit` | Outstation travel assistance & transit hub directions |
 
-#### Windows (PowerShell or Command Prompt):
-```powershell
-.\mvnw.cmd spring-boot:run
+### Doctor APIs
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/doctors` | List doctors (`?hospitalId=...&specialty=...&district=...`) |
+| `GET` | `/api/doctors/{id}` | Get doctor profile and credentials |
+| `GET` | `/api/doctors/{id}/slots` | Get available OPD slots for date (`?date=YYYY-MM-DD`) |
+
+### Appointment APIs
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/appointments` | Book demo appointment with outstation travel assistance options |
+| `GET` | `/api/appointments/my` | View logged-in patient's appointments |
+| `GET` | `/api/appointments/{reference}` | Get appointment details by booking reference |
+| `POST` | `/api/appointments/{id}/cancel` | Cancel demo appointment and reopen time slot |
+
+#### Sample Booking REST API Request:
+```json
+POST /api/appointments
+Content-Type: application/json
+
+{
+  "slotId": 12,
+  "patientName": "Ravi Shankar",
+  "patientPhone": "9840123456",
+  "patientEmail": "ravi@sample.local",
+  "reason": "Cardiology OPD consultation",
+  "outstationPatient": true,
+  "travelOrigin": "Tiruchirappalli, Tamil Nadu",
+  "needsWheelchair": true,
+  "needsLanguageSupport": true,
+  "preferredLanguage": "Tamil",
+  "confirmDemoNotice": true
+}
 ```
 
-#### Linux / macOS:
-```bash
+---
+
+## ☁️ Deploying on Render (Free Web Service)
+
+CuraTransit is fully configured for deployment on **[Render](https://render.com)**.
+
+### Configuration Files Included:
+- **`system.properties`**: Declares `java.runtime.version=17` so Render automatically selects Java 17.
+- **`render.yaml`**: Pre-configured Render Blueprint with free web service definitions.
+- **`application.properties`**: Dynamic port binding via `server.port=${PORT:8080}`.
+- **Executable JAR**: Maven builds `target/curatransit-1.0.0.jar`.
+
+### Option A: 1-Click Blueprint Deployment via Git
+1. Push this repository to your GitHub or GitLab account.
+2. Log in to [Render Dashboard](https://dashboard.render.com).
+3. Click **New +** > **Blueprint**.
+4. Select your repository. Render will automatically detect `render.yaml` and configure the service.
+5. Click **Apply**.
+
+### Option B: Manual Web Service Setup on Render
+1. Go to [Render Dashboard](https://dashboard.render.com) > **New +** > **Web Service**.
+2. Connect your Git repository.
+3. Configure the following settings:
+   - **Name:** `curatransit` (or your chosen name)
+   - **Region:** Any (e.g. *Oregon, US* or *Frankfurt, EU*)
+   - **Branch:** `main`
+   - **Runtime:** `Java`
+   - **Build Command:**
+     ```bash
+     mvn clean package -DskipTests
+     ```
+   - **Start Command:**
+     ```bash
+     java -jar target/curatransit-1.0.0.jar
+     ```
+   - **Instance Type:** `Free`
+4. In **Environment Variables**, add:
+   - `PORT`: `10000` (Render will override this automatically)
+   - `JAVA_VERSION`: `17`
+   - `TEXTBEE_ENABLED`: `false` (or `true` if you have TextBee credentials)
+   - `TEXTBEE_API_KEY`: *(Optional TextBee API Key)*
+   - `TEXTBEE_DEVICE_ID`: *(Optional TextBee Device ID)*
+5. Click **Create Web Service**. Your application will be live in 2-3 minutes at `https://<your-service-name>.onrender.com`.
+
+---
+
+## 🚀 Running Locally
+
+### Prerequisites
+- **Java:** JDK 17 or higher.
+- **Maven:** Apache Maven 3.9+ (A wrapper `mvnw.cmd` / `mvnw` is included in the project root).
+
+### 1. Build and Run
+```powershell
+# Windows:
+.\mvnw.cmd spring-boot:run
+
+# Linux / macOS:
 ./mvnw spring-boot:run
 ```
 
-Alternatively, build an executable JAR and run it directly:
-```bash
-.\mvnw.cmd clean package -DskipTests
-java -jar target/tamilnadu-smart-hospital-1.0.0-SNAPSHOT.jar
+Alternatively, build and run the packaged JAR:
+```powershell
+.\mvnw.cmd package -DskipTests
+java -jar target/curatransit-1.0.0.jar
 ```
 
-### 2. Access the Portal
-- **Application URL:** [http://localhost:8080](http://localhost:8080)
+### 2. Access the Application
+- **Web Portal:** [http://localhost:8080](http://localhost:8080)
 - **H2 In-Memory Database Console:** [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
-  - **JDBC URL:** `jdbc:h2:mem:smarthospitaldb`
-  - **User Name:** `sa`
-  - **Password:** *(leave blank)*
+  - **JDBC URL:** `jdbc:h2:mem:curatransitdb`
+  - **Username:** `sa`
+  - **Password:** *(empty)*
 
 ---
 
-## 🏗️ Project Architecture & Data Model
+## 📱 TextBee.dev SMS Integration
 
-Organized into clean, idiomatic Spring Boot packages:
-```
-com.tn.smarthospital
-├── config             # SecurityConfig (BCrypt, role-based filters, CSRF) & DataInitializer
-├── controller         # Spring MVC controllers for Home, Hospital, Doctor, Booking, Dashboards
-├── dto                # Form and Request objects with Jakarta validation constraints
-├── model              # JPA Entities (Hospital, Doctor, AvailabilitySlot, Appointment, User, Notification)
-├── repository         # Spring Data JPA repositories with custom JPQL queries
-└── service            # Business services handling thread-safe booking, cancellations, notifications
-```
+CuraTransit integrates with the **[TextBee.dev](https://textbee.dev)** SMS gateway to dispatch real-time SMS notifications to patients when demo appointments are booked, cancelled, or updated.
 
-### Double-Booking Prevention
-The platform enforces race condition prevention at both the **Service layer** (synchronization & atomic status check) and the **Database layer** (unique constraints on `AvailabilitySlot` and `@OneToOne` foreign key mapping on `Appointment`).
-
----
-
-## 📱 TextBee.dev SMS Gateway Integration
-
-Tamil Nadu Smart Hospital integrates with the **[TextBee.dev](https://textbee.dev)** SMS gateway to dispatch real-time informational SMS notifications to patients when demo appointments are booked, cancelled, or updated.
-
-### 1. TextBee Account & Device Setup
-1. **Sign Up:** Register for an account at [https://textbee.dev](https://textbee.dev).
-2. **Download & Connect Android Gateway App:** Install the official TextBee Android APK on an Android device that will act as your SMS sender.
-3. **Register Device:** Log in to the Android app; your device will register with your TextBee account and appear in your dashboard.
-4. **Locate Device ID:** In your [TextBee Dashboard](https://textbee.dev/dashboard), navigate to **Devices** and copy your **Device ID**.
-5. **Generate API Key:** In the dashboard, navigate to **API Settings** > **API Keys**, generate a new secret API key, and copy it.
-
-### 2. Environment Variables Configuration
-To ensure zero credential leaks, all credentials must be stored strictly in environment variables and never committed to source control:
-
-| Variable | Required | Default | Description |
-|---|---|---|---|
-| `TEXTBEE_API_KEY` | Yes (when enabled) | *(empty)* | Your private TextBee API key (sent via `x-api-key` header) |
-| `TEXTBEE_DEVICE_ID` | Yes (when enabled) | *(empty)* | The target Android Device ID registered in your TextBee dashboard |
-| `TEXTBEE_API_URL` | No | `https://api.textbee.dev/api/v1` | Official TextBee API base URL |
-| `TEXTBEE_ENABLED` | No | `false` | Set to `true` to activate live SMS dispatch |
-
-#### Local Development Setup (.env file)
-A template file `.env.example` is provided in the repository root:
+### Configuration (`.env` or Environment Variables):
 ```env
 TEXTBEE_API_KEY=your_textbee_api_key_here
 TEXTBEE_DEVICE_ID=your_textbee_device_id_here
 TEXTBEE_API_URL=https://api.textbee.dev/api/v1
 TEXTBEE_ENABLED=true
 ```
-Create a local `.env` file (which is already included in `.gitignore`):
-```powershell
-# In PowerShell (Windows):
-$env:TEXTBEE_API_KEY="your_actual_api_key"
-$env:TEXTBEE_DEVICE_ID="your_device_id"
-$env:TEXTBEE_ENABLED="true"
-.\mvnw.cmd spring-boot:run
-```
-```bash
-# In Linux / macOS:
-export TEXTBEE_API_KEY="your_actual_api_key"
-export TEXTBEE_DEVICE_ID="your_device_id"
-export TEXTBEE_ENABLED="true"
-./mvnw spring-boot:run
-```
 
-### 3. SMS Notification Triggers & Formats
-All SMS messages are dispatched **after** database transactions successfully commit and explicitly indicate that they pertain to sample demo appointments:
-
-1. **Appointment Booked:**
-   ```
-   Hello {patientName}, your demo appointment has been booked successfully.
-
-   Doctor: {doctorName} Hospital: {hospitalName} Date: {appointmentDate} Time: {appointmentTime}
-
-   Booking Reference: {bookingReference}
-
-   Important: This is a demo booking and is NOT confirmed with the hospital. Please verify directly with the hospital.
-
-   Tamil Nadu Smart Hospital
-   ```
-2. **Appointment Cancelled:**
-   ```
-   Hello {patientName}, your demo appointment has been cancelled.
-
-   Booking Reference: {bookingReference}
-
-   Tamil Nadu Smart Hospital
-   ```
-3. **Appointment Status Updated:**
-   Sent when a doctor marks an appointment completed or cancelled from their dashboard.
-
-### 4. Admin SMS Diagnostic & Testing Tool
-Hospital administrators can manage and test the SMS gateway from the Admin Console (`/admin/dashboard`):
-- **Live Status:** Displays whether TextBee is `ENABLED` or `DISABLED`.
-- **Credential Masking:** The API Key is masked on the server (e.g. `tb_live_...3829`) and is never sent to the browser in raw format.
-- **Diagnostic SMS Dispatch:** Send a real test SMS to any designated 10-digit mobile number with immediate delivery feedback.
-- **Security Guidance:** Prominent warnings reminding administrators to maintain credentials server-side only.
-
-### 5. Automated Tests & Mocking
-The test suite in `com.tn.smarthospital.service.TextBeeSmsServiceTest` covers all 7 edge scenarios without sending real SMS or hitting external endpoints:
-1. **SMS API Success:** Verifies payload structure (`{"recipients":["+91..."],"message":"...","deviceId":"..."}`) and `x-api-key` header with HTTP 200 mock.
-2. **Invalid API Key:** Verifies proper handling and user-friendly error capturing when the gateway returns HTTP 401 Unauthorized.
-3. **Network Failure:** Simulates timeout and connection dropouts, verifying graceful fallback.
-4. **SMS Disabled:** Verifies zero network calls occur when `TEXTBEE_ENABLED=false`.
-5. **Booking Despite SMS Failure:** Guarantees that appointment creation and time slot reservation succeed even if the SMS gateway is unreachable or fails.
-6. **Cancellation Notification:** Verifies SMS dispatch when an appointment is cancelled by a patient or doctor.
-7. **Duplicate Notification Prevention:** Prevents double-send when forms are repeatedly submitted or on duplicate requests.
-
-To run the automated SMS test suite:
-```powershell
-.\mvnw.cmd test -Dtest=TextBeeSmsServiceTest
-```
-
-### 6. Security & Privacy Safeguards
-- **Zero Source Credential Leaks:** No API keys are hardcoded in Java code, properties, HTML, JavaScript, or Thymeleaf templates.
-- **Log Sanitation:** Patient mobile numbers are masked in application logs (e.g., `******3210`).
-- **Resilient Booking Flow:** SMS dispatch runs inside safe try-catch blocks and will never rollback a patient's appointment booking.
-- **Disclaimer Banner:** Every booking confirmation presents the mandatory patient advisory:
-  > *"Demo booking — not confirmed with the hospital. SMS notifications are informational only."*
+- When `TEXTBEE_ENABLED=false` (default), the application operates safely in simulation mode with zero external network requests.
+- When enabled, notifications are sent directly through the patient's registered mobile number without interfering with booking transactions.
+- Zero credential exposure: Keys are read strictly from environment variables and never logged or exposed in the frontend.
 
 ---
 
-## 🛠️ Transitioning to a Verified Production System
+## 🧪 Automated Test Suite
 
-To transition this demonstration prototype into a state-grade production portal:
+Run the automated JUnit 5 test suite:
+```powershell
+.\mvnw.cmd test
+```
+Tests cover:
+- TextBee SMS API payload serialization and authorization header verification
+- Invalid API key (HTTP 401) handling and timeout resilience
+- Concurrency reservation and booking rollback protection
+- Spring Context loading and database integrity checks
 
-1. **Production Database:**
-   - Replace the embedded H2 database with a managed PostgreSQL or MySQL cluster.
-   - Configure connection pooling via HikariCP and database migrations via Flyway or Liquibase.
+---
 
-2. **Integration with Official Tamil Nadu Health Registries:**
-   - Replace fictional demo data with verified hospital registries using the **National Health Facility Registry (HFR)** and **Tamil Nadu Health System Reform Program (TNHSRP)** APIs.
-   - Authenticate medical practitioners through the **National Healthcare Professionals Registry (HPR)**.
+## 🏛️ Project Structure
 
-3. **Digital Identity & ABHA (Ayushman Bharat Digital Mission):**
-   - Integrate ABHA (Health ID) creation and OAuth2 OTP verification for patient accounts.
-   - Secure patient communications using transactional SMS gateways (e.g. CDAC SMS Seva / NIC Gateway).
-
-4. **Production Security Hardening:**
-   - Move secrets out of code and configuration into environment variables or secret managers (e.g., AWS Secrets Manager, HashiCorp Vault).
-   - Enforce HTTPS/TLS with strict HSTS, Content Security Policy (CSP), and WAF rate-limiting.
-   - Implement audit logging for all patient scheduling transactions.
-
+```
+curatransit
+├── .env.example                               # Environment template for SMS credentials
+├── system.properties                          # Java 17 declaration for Render
+├── render.yaml                                # Render deployment blueprint
+├── pom.xml                                    # Maven configuration & dependencies
+├── src/main/java/com/tn/smarthospital
+│   ├── SmartHospitalApplication.java          # Spring Boot main class
+│   ├── config
+│   │   ├── DataInitializer.java              # Fictional seed data (12 hospitals, 14 doctors, 980 slots)
+│   │   └── SecurityConfig.java               # Spring Security, RBAC & CSRF rules
+│   ├── controller
+│   │   ├── HomeController.java                # Landing page & about routes
+│   │   ├── HospitalController.java            # Hospital listing, detail & comparison routes
+│   │   ├── DoctorController.java              # Doctor schedule & slot selection
+│   │   ├── AppointmentController.java         # Booking form, confirmation slip & cancellation
+│   │   ├── AuthController.java                # Sign in, demo login & registration
+│   │   ├── PatientController.java             # Patient dashboard
+│   │   ├── DoctorPortalController.java        # Doctor portal & OPD queue
+│   │   ├── AdminController.java               # Health administration console & SMS test tools
+│   │   └── api
+│   │       ├── HospitalApiController.java     # REST API for hospitals, transit & comparison
+│   │       ├── DoctorApiController.java       # REST API for doctors & slots
+│   │       ├── AppointmentApiController.java  # REST API for bookings & cancellations
+│   │       └── RestExceptionHandler.java      # Centralized API error handler
+│   ├── dto                                    # Request & form DTOs with Jakarta validation
+│   ├── model                                  # JPA entities (Hospital, Doctor, Slot, Appointment, User)
+│   ├── repository                             # Spring Data JPA repositories with custom JPQL queries
+│   └── service                                # Business logic & SMS services
+└── src/main/resources
+    ├── application.properties                 # Server port, database & SMS properties
+    ├── static
+    │   ├── css/style.css                      # Accessible healthcare teal/blue stylesheet
+    │   └── js/app.js                          # Floating compare bar & interactive form toggles
+    └── templates                              # Thymeleaf server-rendered templates
+```

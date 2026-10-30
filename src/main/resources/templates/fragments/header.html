@@ -1,63 +1,75 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
 </head>
+
 <body>
 
-<header th:fragment="header" class="site-header">
-    <!-- Mandatory Demo Banner -->
-    <div class="demo-banner">
-        <span>⚠️ <strong>Demo Notice</strong> Demo website. Hospital listings and appointment availability are sample data and must be verified directly with the hospital.</span>
-    </div>
-
-    <!-- Main Navigation Bar -->
-    <div class="navbar-container">
-        <a th:href="@{/}" class="brand-logo" aria-label="Tamil Nadu Smart Hospital Home">
-            <div class="brand-icon">🏥</div>
-            <div class="brand-text">
-                <span class="brand-title">TN Smart Hospital</span>
-                <span class="brand-sub">Tamil Nadu Health Portal (Demo)</span>
-            </div>
-        </a>
-
-        <!-- Desktop & Mobile Navigation Links -->
-        <ul class="nav-links" id="mainNav">
-            <li><a th:href="@{/}" class="nav-link">Home</a></li>
-            <li><a th:href="@{/hospitals}" class="nav-link">Hospitals</a></li>
-            <li><a th:href="@{/doctors}" class="nav-link">Doctors</a></li>
-            <li><a th:href="@{/about}" class="nav-link">About Portal</a></li>
-        </ul>
-
-        <!-- Role-aware Auth Actions -->
-        <div class="nav-actions">
-            <!-- Anonymous Visitor -->
-            <div sec:authorize="!isAuthenticated()" style="display: flex; gap: 8px; align-items: center;">
-                <a th:href="@{/login}" class="btn btn-outline btn-sm">Sign In</a>
-                <a th:href="@{/demo-login?role=PATIENT}" class="btn btn-primary btn-sm" title="Quick Demo Login as Patient">⚡ Demo Login</a>
-            </div>
-
-            <!-- Authenticated User -->
-            <div sec:authorize="isAuthenticated()" style="display: flex; gap: 10px; align-items: center;">
-                <a th:href="@{/dashboard-redirect}" class="user-menu-pill" title="Open Your Dashboard">
-                    <span class="user-avatar-tiny">👤</span>
-                    <span sec:authentication="name" style="max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">User</span>
-                    
-                    <span sec:authorize="hasRole('ADMIN')" class="badge badge-teal" style="font-size: 0.65rem;">ADMIN</span>
-                    <span sec:authorize="hasRole('DOCTOR')" class="badge badge-blue" style="font-size: 0.65rem;">DOCTOR</span>
-                    <span sec:authorize="hasRole('PATIENT')" class="badge badge-green" style="font-size: 0.65rem;">PATIENT</span>
-                </a>
-
-                <form th:action="@{/logout}" method="post" style="display: inline; margin: 0;">
-                    <button type="submit" class="btn btn-outline btn-sm" style="padding: 4px 8px;" title="Sign Out">Sign Out</button>
-                </form>
-            </div>
-
-            <button type="button" class="mobile-nav-toggle" aria-label="Toggle Navigation Menu">☰</button>
+    <header th:fragment="header" class="site-header">
+        <!-- Mandatory Demo Banner -->
+        <div class="demo-banner">
+            <span>⚠️ <strong>Demo Notice:</strong> CuraTransit demo website. Hospital listings, transit guidance, and
+                appointment availability are sample data and must be verified directly with the hospital.</span>
         </div>
-    </div>
-</header>
+
+        <!-- Main Navigation Bar -->
+        <div class="navbar-container">
+            <a th:href="@{/}" class="brand-logo" aria-label="CuraTransit Home">
+                <div class="brand-icon">🏥</div>
+                <div class="brand-text">
+                    <span class="brand-title">CuraTransit</span>
+                    <span class="brand-sub">Smart Hospital &amp; Transit Finder</span>
+                </div>
+            </a>
+
+            <!-- Desktop & Mobile Navigation Links -->
+            <ul class="nav-links" id="mainNav">
+                <li><a th:href="@{/}" class="nav-link">Home</a></li>
+                <li><a th:href="@{/hospitals}" class="nav-link">Hospitals</a></li>
+                <li><a th:href="@{/hospitals/compare}" class="nav-link">⚖️ Compare</a></li>
+                <li><a th:href="@{/doctors}" class="nav-link">Doctors</a></li>
+                <li><a th:href="@{/hospitals(hasEmergency=true)}" class="nav-link"
+                        style="color: #dc2626; font-weight: 700;">🚨 Emergency &amp; ICU</a></li>
+                <li><a th:href="@{/about}" class="nav-link">About</a></li>
+            </ul>
+
+            <!-- Role-aware Auth Actions -->
+            <div class="nav-actions">
+                <!-- Anonymous Visitor -->
+                <div sec:authorize="!isAuthenticated()" style="display: flex; gap: 8px; align-items: center;">
+                    <a th:href="@{/login}" class="btn btn-outline btn-sm">Sign In</a>
+                    <a th:href="@{/demo-login?role=PATIENT}" class="btn btn-primary btn-sm"
+                        title="Quick Demo Login as Patient">⚡ Demo Login</a>
+                </div>
+
+                <!-- Authenticated User -->
+                <div sec:authorize="isAuthenticated()" style="display: flex; gap: 10px; align-items: center;">
+                    <a th:href="@{/dashboard-redirect}" class="user-menu-pill" title="Open Your Dashboard">
+                        <span class="user-avatar-tiny">👤</span>
+                        <span sec:authentication="name"
+                            style="max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">User</span>
+
+                        <span sec:authorize="hasRole('ADMIN')" class="badge badge-teal"
+                            style="font-size: 0.65rem;">ADMIN</span>
+                        <span sec:authorize="hasRole('DOCTOR')" class="badge badge-blue"
+                            style="font-size: 0.65rem;">DOCTOR</span>
+                        <span sec:authorize="hasRole('PATIENT')" class="badge badge-green"
+                            style="font-size: 0.65rem;">PATIENT</span>
+                    </a>
+
+                    <form th:action="@{/logout}" method="post" style="display: inline; margin: 0;">
+                        <button type="submit" class="btn btn-outline btn-sm" style="padding: 4px 8px;"
+                            title="Sign Out">Sign Out</button>
+                    </form>
+                </div>
+
+                <button type="button" class="mobile-nav-toggle" aria-label="Toggle Navigation Menu">☰</button>
+            </div>
+        </div>
+    </header>
 
 </body>
-</html>
 
+</html>

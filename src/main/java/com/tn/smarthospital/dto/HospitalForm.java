@@ -29,6 +29,18 @@ public class HospitalForm {
     private String description;
     private boolean active = true;
 
+    // CuraTransit Emergency, ICU & Transit Fields
+    private boolean hasEmergencyServices = true;
+    private boolean hasIcu = true;
+    private int icuBedsAvailable = 10;
+    private boolean wheelchairAccessible = true;
+    private String languagesSupported = "Tamil, English";
+    private String nearestRailwayStation;
+    private String nearestAirport;
+    private String nearestBusStand;
+    private String lodgingGuidance;
+    private String transitHelpDeskPhone;
+
     public HospitalForm() {
     }
 
@@ -126,6 +138,86 @@ public class HospitalForm {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public boolean isHasEmergencyServices() {
+        return hasEmergencyServices;
+    }
+
+    public void setHasEmergencyServices(boolean hasEmergencyServices) {
+        this.hasEmergencyServices = hasEmergencyServices;
+    }
+
+    public boolean isHasIcu() {
+        return hasIcu;
+    }
+
+    public void setHasIcu(boolean hasIcu) {
+        this.hasIcu = hasIcu;
+    }
+
+    public int getIcuBedsAvailable() {
+        return icuBedsAvailable;
+    }
+
+    public void setIcuBedsAvailable(int icuBedsAvailable) {
+        this.icuBedsAvailable = icuBedsAvailable;
+    }
+
+    public boolean isWheelchairAccessible() {
+        return wheelchairAccessible;
+    }
+
+    public void setWheelchairAccessible(boolean wheelchairAccessible) {
+        this.wheelchairAccessible = wheelchairAccessible;
+    }
+
+    public String getLanguagesSupported() {
+        return languagesSupported;
+    }
+
+    public void setLanguagesSupported(String languagesSupported) {
+        this.languagesSupported = languagesSupported;
+    }
+
+    public String getNearestRailwayStation() {
+        return nearestRailwayStation;
+    }
+
+    public void setNearestRailwayStation(String nearestRailwayStation) {
+        this.nearestRailwayStation = nearestRailwayStation;
+    }
+
+    public String getNearestAirport() {
+        return nearestAirport;
+    }
+
+    public void setNearestAirport(String nearestAirport) {
+        this.nearestAirport = nearestAirport;
+    }
+
+    public String getNearestBusStand() {
+        return nearestBusStand;
+    }
+
+    public void setNearestBusStand(String nearestBusStand) {
+        this.nearestBusStand = nearestBusStand;
+    }
+
+    public String getLodgingGuidance() {
+        return lodgingGuidance;
+    }
+
+    public void setLodgingGuidance(String lodgingGuidance) {
+        this.lodgingGuidance = lodgingGuidance;
+    }
+
+    public String getTransitHelpDeskPhone() {
+        return transitHelpDeskPhone;
+    }
+
+    public void setTransitHelpDeskPhone(String transitHelpDeskPhone) {
+        this.transitHelpDeskPhone = transitHelpDeskPhone;
     }
 }
 

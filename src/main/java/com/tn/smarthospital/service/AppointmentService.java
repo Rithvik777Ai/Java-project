@@ -63,7 +63,7 @@ public class AppointmentService {
             reference = "TNSH-" + datePrefix + "-" + randomCode;
         } while (appointmentRepository.findByBookingReference(reference).isPresent());
 
-        // 5. Create Appointment
+        // 5. Create Appointment with CuraTransit Travel Assistance Options
         Appointment appointment = new Appointment(
                 reference,
                 patientUser,
@@ -77,6 +77,12 @@ public class AppointmentService {
                 slot.getStartTime(),
                 request.getReason() != null ? request.getReason().trim() : "General Consultation"
         );
+
+        appointment.setNeedsWheelchair(request.isNeedsWheelchair());
+        appointment.setNeedsLanguageSupport(request.isNeedsLanguageSupport());
+        appointment.setPreferredLanguage(request.getPreferredLanguage());
+        appointment.setOutstationPatient(request.isOutstationPatient());
+        appointment.setTravelOrigin(request.getTravelOrigin());
 
         Appointment savedAppointment = appointmentRepository.save(appointment);
 

@@ -83,6 +83,64 @@
                     <small class="form-text">Please do not enter confidential medical history or personal identification numbers.</small>
                 </div>
 
+                <!-- CuraTransit Travel & Accessibility Assistance Section -->
+                <div style="background: #f0fdfa; border: 1.5px solid #ccfbf1; border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                        <span style="font-size: 1.25rem;">🚆</span>
+                        <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--primary);">
+                            CuraTransit Travel &amp; Accessibility Assistance (Optional)
+                        </h3>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+                        Travelling from another district or state? Request support for smoother hospital arrival.
+                    </p>
+
+                    <!-- Outstation Patient Checkbox -->
+                    <div style="margin-bottom: 14px;">
+                        <label class="checkbox-label" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600;">
+                            <input type="checkbox" id="outstationCheckbox" th:field="*{outstationPatient}">
+                            <span>Travelling from outside city / another district or state</span>
+                        </label>
+                    </div>
+
+                    <!-- Travel Origin input (shown if outstation) -->
+                    <div id="originGroup" class="form-group" style="margin-bottom: 16px; margin-left: 24px;" th:styleappend="*{outstationPatient} ? '' : 'display: none;'">
+                        <label for="travelOrigin" class="form-label">Place of Origin (City / State)</label>
+                        <input type="text" id="travelOrigin" class="form-control" th:field="*{travelOrigin}"
+                               placeholder="e.g. Tiruchirappalli, Madurai, or Bengaluru">
+                        <small class="form-text">Assists hospital reception in coordinating arrival timing and lodging recommendations.</small>
+                    </div>
+
+                    <!-- Wheelchair Assistance Checkbox -->
+                    <div style="margin-bottom: 14px;">
+                        <label class="checkbox-label" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600;">
+                            <input type="checkbox" id="wheelchairCheckbox" th:field="*{needsWheelchair}">
+                            <span>♿ Request Wheelchair Assistance at hospital main entrance / gate</span>
+                        </label>
+                    </div>
+
+                    <!-- Language Coordination Checkbox -->
+                    <div style="margin-bottom: 14px;">
+                        <label class="checkbox-label" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600;">
+                            <input type="checkbox" id="languageCheckbox" th:field="*{needsLanguageSupport}">
+                            <span>🗣️ Request Language Coordinator / Interpreter</span>
+                        </label>
+                    </div>
+
+                    <!-- Preferred Language Selector -->
+                    <div id="languageGroup" class="form-group" style="margin-left: 24px;" th:styleappend="*{needsLanguageSupport} ? '' : 'display: none;'">
+                        <label for="preferredLanguage" class="form-label">Preferred Spoken Language</label>
+                        <select id="preferredLanguage" class="form-control" th:field="*{preferredLanguage}">
+                            <option value="Tamil">Tamil (தமிழ்)</option>
+                            <option value="English">English</option>
+                            <option value="Telugu">Telugu (తెలుగు)</option>
+                            <option value="Hindi">Hindi (हिंदी)</option>
+                            <option value="Malayalam">Malayalam (മലയാളം)</option>
+                            <option value="Kannada">Kannada (ಕನ್ನಡ)</option>
+                        </select>
+                    </div>
+                </div>
+
                 <!-- Mandatory Demo Acknowledgment Checkbox -->
                 <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: var(--radius-md); padding: 14px; margin-bottom: 24px;">
                     <label class="checkbox-label">

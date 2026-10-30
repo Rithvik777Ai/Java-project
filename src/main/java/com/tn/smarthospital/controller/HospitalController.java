@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,21 @@ public class HospitalController {
         currentUser.ifPresent(user -> model.addAttribute("currentUser", user));
 
         return "hospitals/list";
+    }
+
+    @GetMapping("/compare")
+    public String compareHospitals(@RequestParam(value = "ids", required = false) List<Long> ids, Model model) {
+        List<Hospital> hospitals = hospitalService.getHospitalsForComparison(ids);
+        List<Hospital> allHospitals = hospitalService.getAllActiveHospitals();
+
+        model.addAttribute("comparedHospitals", hospitals);
+        model.addAttribute("allHospitals", allHospitals);
+        model.addAttribute("selectedIds", ids != null ? ids : java.util.Collections.emptyList());
+
+        Optional<User> currentUser = userService.getCurrentUser();
+        currentUser.ifPresent(user -> model.addAttribute("currentUser", user));
+
+        return "hospitals/compare";
     }
 
     @GetMapping("/{id}")

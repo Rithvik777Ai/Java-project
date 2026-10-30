@@ -8,8 +8,8 @@
 <footer th:fragment="footer" class="site-footer">
     <div class="footer-top">
         <div class="footer-brand">
-            <h4>Tamil Nadu Smart Hospital</h4>
-            <p>A modern digital healthcare prototype designed for searching hospitals, discovering medical specialists, and booking demo appointments across all districts of Tamil Nadu.</p>
+            <h4>CuraTransit – Smart Hospital &amp; Transit Finder</h4>
+            <p>An integrated healthcare and medical transit platform designed for locating hospitals, comparing facilities, accessing outstation travel assistance, and booking demo appointments across Tamil Nadu.</p>
             <div style="display: flex; gap: 8px;">
                 <span class="badge badge-demo">Sample Prototype</span>
                 <span class="badge badge-teal">Tamil Nadu State</span>
@@ -17,17 +17,18 @@
         </div>
 
         <div class="footer-col">
-            <h5>Explore</h5>
+            <h5>Explore CuraTransit</h5>
             <ul class="footer-links">
                 <li><a th:href="@{/hospitals}">Browse Hospitals</a></li>
-                <li><a th:href="@{/doctors}">Find Doctors</a></li>
+                <li><a th:href="@{/hospitals/compare}">Compare Hospitals</a></li>
+                <li><a th:href="@{/hospitals(hasEmergency=true)}">Emergency &amp; ICU Care</a></li>
+                <li><a th:href="@{/doctors}">Find Specialist Doctors</a></li>
                 <li><a th:href="@{/about}">About This Portal</a></li>
-                <li><a th:href="@{/login}">Demo Sign In</a></li>
             </ul>
         </div>
 
         <div class="footer-col">
-            <h5>Key Districts</h5>
+            <h5>Key Healthcare Hubs</h5>
             <ul class="footer-links">
                 <li><a th:href="@{/hospitals(district='Chennai')}">Chennai</a></li>
                 <li><a th:href="@{/hospitals(district='Coimbatore')}">Coimbatore</a></li>
@@ -40,7 +41,7 @@
         <div class="footer-col">
             <h5>Safety Notice</h5>
             <div class="footer-notice-box">
-                <p><strong>Demo Platform:</strong> Hospital listings and appointment availability are sample data and must be verified directly with the hospital.</p>
+                <p><strong>Demo Platform:</strong> Hospital listings, transit directions, and appointment availability are sample data and must be verified directly with the hospital.</p>
                 <p style="margin-top: 8px; font-size: 0.8rem; color: #94a3b8;">For medical emergencies in Tamil Nadu, dial <strong>108</strong> (Ambulance) or <strong>104</strong> (Health Helpline).</p>
             </div>
         </div>
@@ -48,15 +49,14 @@
 
     <div class="footer-bottom">
         <div>
-            &copy; <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2026</span> Tamil Nadu Smart Hospital. Fictional demo dataset for software demonstration.
+            &copy; <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2026</span> CuraTransit. Fictional demonstration dataset for software evaluation.
         </div>
         <div style="display: flex; gap: 16px;">
             <span>State: Tamil Nadu, India</span>
-            <span>Framework: Spring Boot &amp; Thymeleaf</span>
+            <span>Stack: Java 17 &amp; Spring Boot 3.3</span>
         </div>
     </div>
 </footer>
 
 </body>
 </html>
-

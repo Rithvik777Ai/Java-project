@@ -129,6 +129,88 @@
                           placeholder="Short summary of fictional hospital facilities..."></textarea>
             </div>
 
+            <!-- CuraTransit Emergency, ICU & Transit Facilities Section -->
+            <div style="background: #f0fdfa; border: 1.5px solid #ccfbf1; border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px;">
+                <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 12px;">
+                    🚆 CuraTransit Critical Care &amp; Transit Hub Information
+                </h3>
+
+                <!-- Emergency, ICU, Wheelchair Checkboxes -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px;">
+                    <div>
+                        <label class="checkbox-label">
+                            <input type="checkbox" th:field="*{hasEmergencyServices}">
+                            <span>🚨 24x7 Emergency Services</span>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label class="checkbox-label">
+                            <input type="checkbox" th:field="*{hasIcu}">
+                            <span>🛏️ Intensive Care Unit (ICU)</span>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label class="checkbox-label">
+                            <input type="checkbox" th:field="*{wheelchairAccessible}">
+                            <span>♿ Wheelchair Accessible</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- ICU Beds & Transit Phone -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                    <div class="form-group">
+                        <label for="icuBedsAvailable" class="form-label">Available ICU Beds Count</label>
+                        <input type="number" id="icuBedsAvailable" class="form-control" th:field="*{icuBedsAvailable}" min="0" max="200">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="transitHelpDeskPhone" class="form-label">Transit Coordinator Phone</label>
+                        <input type="text" id="transitHelpDeskPhone" class="form-control" th:field="*{transitHelpDeskPhone}"
+                               placeholder="e.g. 044-2200-9999">
+                    </div>
+                </div>
+
+                <!-- Nearest Railway & Airport -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                    <div class="form-group">
+                        <label for="nearestRailwayStation" class="form-label">Nearest Railway Station</label>
+                        <input type="text" id="nearestRailwayStation" class="form-control" th:field="*{nearestRailwayStation}"
+                               placeholder="e.g. Chennai Central (MGR) - 4.2 km">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nearestAirport" class="form-label">Nearest Airport</label>
+                        <input type="text" id="nearestAirport" class="form-control" th:field="*{nearestAirport}"
+                               placeholder="e.g. Chennai Airport (MAA) - 9.5 km">
+                    </div>
+                </div>
+
+                <!-- Nearest Bus Stand & Languages -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                    <div class="form-group">
+                        <label for="nearestBusStand" class="form-label">Nearest Bus Terminus</label>
+                        <input type="text" id="nearestBusStand" class="form-control" th:field="*{nearestBusStand}"
+                               placeholder="e.g. CMBT Koyambedu - 6.0 km">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="languagesSupported" class="form-label">Languages Supported by Staff</label>
+                        <input type="text" id="languagesSupported" class="form-control" th:field="*{languagesSupported}"
+                               placeholder="e.g. Tamil, English, Telugu, Hindi">
+                    </div>
+                </div>
+
+                <!-- Lodging Guidance -->
+                <div class="form-group">
+                    <label for="lodgingGuidance" class="form-label">Attendant Lodging Guidance</label>
+                    <textarea id="lodgingGuidance" class="form-control" rows="2" th:field="*{lodgingGuidance}"
+                              placeholder="e.g. Verified guest houses and family dormitories within 500m..."></textarea>
+                </div>
+            </div>
+
             <!-- Active Status -->
             <div class="form-group" style="margin-bottom: 24px;">
                 <label class="checkbox-label">

@@ -29,6 +29,7 @@ public class Doctor {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hospital_id", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"doctors", "hibernateLazyInitializer", "handler"})
     private Hospital hospital;
 
     private String languages; // e.g. "Tamil, English"
@@ -48,9 +49,11 @@ public class Doctor {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"doctor", "hibernateLazyInitializer", "handler"})
     private List<AvailabilitySlot> slots = new ArrayList<>();
 
     public Doctor() {

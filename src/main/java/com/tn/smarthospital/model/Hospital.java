@@ -54,7 +54,39 @@ public class Hospital {
     @Column(nullable = false)
     private boolean active = true;
 
+    // CuraTransit Emergency, ICU & Travel Assistance Fields
+    @Column(nullable = false)
+    private boolean hasEmergencyServices = true;
+
+    @Column(nullable = false)
+    private boolean hasIcu = true;
+
+    @Column(nullable = false)
+    private int icuBedsAvailable = 12;
+
+    @Column(nullable = false)
+    private boolean wheelchairAccessible = true;
+
+    @Column(length = 255)
+    private String languagesSupported = "Tamil, English, Hindi, Telugu, Malayalam";
+
+    @Column(length = 255)
+    private String nearestRailwayStation;
+
+    @Column(length = 255)
+    private String nearestAirport;
+
+    @Column(length = 255)
+    private String nearestBusStand;
+
+    @Column(length = 500)
+    private String lodgingGuidance;
+
+    @Column(length = 100)
+    private String transitHelpDeskPhone;
+
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hospital", "hibernateLazyInitializer", "handler"})
     private List<Doctor> doctors = new ArrayList<>();
 
     public Hospital() {
@@ -196,6 +228,86 @@ public class Hospital {
 
     public void setDoctors(List<Doctor> doctors) {
         this.doctors = doctors;
+    }
+
+    public boolean isHasEmergencyServices() {
+        return hasEmergencyServices;
+    }
+
+    public void setHasEmergencyServices(boolean hasEmergencyServices) {
+        this.hasEmergencyServices = hasEmergencyServices;
+    }
+
+    public boolean isHasIcu() {
+        return hasIcu;
+    }
+
+    public void setHasIcu(boolean hasIcu) {
+        this.hasIcu = hasIcu;
+    }
+
+    public int getIcuBedsAvailable() {
+        return icuBedsAvailable;
+    }
+
+    public void setIcuBedsAvailable(int icuBedsAvailable) {
+        this.icuBedsAvailable = icuBedsAvailable;
+    }
+
+    public boolean isWheelchairAccessible() {
+        return wheelchairAccessible;
+    }
+
+    public void setWheelchairAccessible(boolean wheelchairAccessible) {
+        this.wheelchairAccessible = wheelchairAccessible;
+    }
+
+    public String getLanguagesSupported() {
+        return languagesSupported;
+    }
+
+    public void setLanguagesSupported(String languagesSupported) {
+        this.languagesSupported = languagesSupported;
+    }
+
+    public String getNearestRailwayStation() {
+        return nearestRailwayStation;
+    }
+
+    public void setNearestRailwayStation(String nearestRailwayStation) {
+        this.nearestRailwayStation = nearestRailwayStation;
+    }
+
+    public String getNearestAirport() {
+        return nearestAirport;
+    }
+
+    public void setNearestAirport(String nearestAirport) {
+        this.nearestAirport = nearestAirport;
+    }
+
+    public String getNearestBusStand() {
+        return nearestBusStand;
+    }
+
+    public void setNearestBusStand(String nearestBusStand) {
+        this.nearestBusStand = nearestBusStand;
+    }
+
+    public String getLodgingGuidance() {
+        return lodgingGuidance;
+    }
+
+    public void setLodgingGuidance(String lodgingGuidance) {
+        this.lodgingGuidance = lodgingGuidance;
+    }
+
+    public String getTransitHelpDeskPhone() {
+        return transitHelpDeskPhone;
+    }
+
+    public void setTransitHelpDeskPhone(String transitHelpDeskPhone) {
+        this.transitHelpDeskPhone = transitHelpDeskPhone;
     }
 }
 

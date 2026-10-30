@@ -17,6 +17,7 @@ public class AvailabilitySlot {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"slots", "hibernateLazyInitializer", "handler"})
     private Doctor doctor;
 
     @Column(nullable = false)

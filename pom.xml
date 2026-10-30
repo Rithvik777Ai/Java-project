@@ -12,10 +12,10 @@
     </parent>
 
     <groupId>com.tn.smarthospital</groupId>
-    <artifactId>tamilnadu-smart-hospital</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-    <name>Tamil Nadu Smart Hospital</name>
-    <description>Healthcare appointment platform for Tamil Nadu, India (Demo Portal)</description>
+    <artifactId>curatransit</artifactId>
+    <version>1.0.0</version>
+    <name>CuraTransit - Smart Hospital Finder and Appointment Booking System</name>
+    <description>CuraTransit: Smart Hospital Finder, Medical Travel Assistance and Appointment Booking System</description>
 
     <properties>
         <java.version>17</java.version>
@@ -71,6 +71,7 @@
     </dependencies>
 
     <build>
+        <finalName>curatransit-1.0.0</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

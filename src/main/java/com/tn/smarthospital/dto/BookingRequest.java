@@ -27,6 +27,13 @@ public class BookingRequest {
 
     private boolean confirmDemoNotice;
 
+    // CuraTransit Travel Assistance Options
+    private boolean needsWheelchair;
+    private boolean needsLanguageSupport;
+    private String preferredLanguage;
+    private boolean isOutstationPatient;
+    private String travelOrigin;
+
     public BookingRequest() {
     }
 
@@ -76,6 +83,46 @@ public class BookingRequest {
 
     public void setConfirmDemoNotice(boolean confirmDemoNotice) {
         this.confirmDemoNotice = confirmDemoNotice;
+    }
+
+    public boolean isNeedsWheelchair() {
+        return needsWheelchair;
+    }
+
+    public void setNeedsWheelchair(boolean needsWheelchair) {
+        this.needsWheelchair = needsWheelchair;
+    }
+
+    public boolean isNeedsLanguageSupport() {
+        return needsLanguageSupport;
+    }
+
+    public void setNeedsLanguageSupport(boolean needsLanguageSupport) {
+        this.needsLanguageSupport = needsLanguageSupport;
+    }
+
+    public String getPreferredLanguage() {
+        return preferredLanguage;
+    }
+
+    public void setPreferredLanguage(String preferredLanguage) {
+        this.preferredLanguage = preferredLanguage;
+    }
+
+    public boolean isOutstationPatient() {
+        return isOutstationPatient;
+    }
+
+    public void setOutstationPatient(boolean outstationPatient) {
+        isOutstationPatient = outstationPatient;
+    }
+
+    public String getTravelOrigin() {
+        return travelOrigin;
+    }
+
+    public void setTravelOrigin(String travelOrigin) {
+        this.travelOrigin = travelOrigin;
     }
 }
 

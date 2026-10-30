@@ -220,6 +220,7 @@
                         <th>Doctor &amp; Specialty</th>
                         <th>Hospital &amp; District</th>
                         <th>Date &amp; Time</th>
+                        <th>CuraTransit Support</th>
                         <th>Status</th>
                         <th>Slip</th>
                     </tr>
@@ -244,6 +245,14 @@
                         <td>
                             <div style="font-weight: 600;" th:text="${a.getFormattedDate()}">31 Oct 2026</div>
                             <div style="font-size: 0.8rem; color: var(--text-muted);" th:text="${a.getFormattedTime()}">09:00 AM</div>
+                        </td>
+                        <td>
+                            <div th:if="${a.needsWheelchair or a.needsLanguageSupport or a.outstationPatient}" style="display: flex; gap: 4px; flex-wrap: wrap;">
+                                <span th:if="${a.needsWheelchair}" class="badge badge-green" style="font-size: 0.65rem;">♿ Wheelchair</span>
+                                <span th:if="${a.needsLanguageSupport}" class="badge badge-blue" style="font-size: 0.65rem;">🗣️ <span th:text="${a.preferredLanguage}">Tamil</span></span>
+                                <span th:if="${a.outstationPatient}" class="badge badge-teal" style="font-size: 0.65rem;">🚆 Outstation</span>
+                            </div>
+                            <span th:unless="${a.needsWheelchair or a.needsLanguageSupport or a.outstationPatient}" style="color: var(--text-muted); font-size: 0.8rem;">Standard OPD</span>
                         </td>
                         <td>
                             <span th:if="${a.status.name() == 'CONFIRMED'}" class="badge badge-teal">CONFIRMED</span>
@@ -280,6 +289,7 @@
                         <th>Hospital Name</th>
                         <th>Type</th>
                         <th>District &amp; City</th>
+                        <th>Emergency &amp; ICU</th>
                         <th>Departments</th>
                         <th>Status</th>
                         <th>Actions</th>
@@ -295,6 +305,13 @@
                         <td>
                             <div th:text="${h.district}">Chennai</div>
                             <div style="font-size: 0.8rem; color: var(--text-muted);" th:text="${h.city}">Guindy</div>
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                                <span th:if="${h.hasEmergencyServices}" class="badge badge-emergency" style="font-size: 0.7rem;">🚨 24x7</span>
+                                <span th:if="${h.hasIcu}" class="badge badge-teal" style="font-size: 0.7rem;">🛏️ <span th:text="${h.icuBedsAvailable}">10</span> Beds</span>
+                                <span th:if="${h.wheelchairAccessible}" class="badge badge-green" style="font-size: 0.7rem;">♿</span>
+                            </div>
                         </td>
                         <td>
                             <div style="max-width: 200px; font-size: 0.8rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
