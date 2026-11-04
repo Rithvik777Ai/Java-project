@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- ==========================================
+     Patient Dashboard Sidebar
+     ========================================== -->
+<aside th:fragment="patientSidebar(activeTab)" class="dash-sidebar">
+    <a th:href="@{/}" class="dash-sidebar-brand">
+        <span class="logo-icon">🏥</span>
+        <div>
+            <div class="logo-title">TN Smart Hospital</div>
+            <div class="logo-sub">Patient Portal (Demo)</div>
+        </div>
+    </a>
+
+    <ul class="dash-sidebar-menu">
+        <li>
+            <a class="dash-nav-link" data-tab="overview" th:classappend="${activeTab == 'overview' ? 'active' : ''}">
+                <span class="icon">📊</span>
+                <span>Overview</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/hospitals}" class="dash-nav-link">
+                <span class="icon">🏥</span>
+                <span>Find Hospitals</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/doctors}" class="dash-nav-link">
+                <span class="icon">🩺</span>
+                <span>Find Doctors</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/doctors}" class="dash-nav-link">
+                <span class="icon">📅</span>
+                <span>Book Appointment</span>
+            </a>
+        </li>
+        <li>
+            <a class="dash-nav-link" data-tab="appointments" th:classappend="${activeTab == 'appointments' ? 'active' : ''}">
+                <span class="icon">📋</span>
+                <span>My Appointments</span>
+            </a>
+        </li>
+        <li>
+            <a class="dash-nav-link" data-tab="records" th:classappend="${activeTab == 'records' ? 'active' : ''}">
+                <span class="icon">📁</span>
+                <span>Medical Records</span>
+            </a>
+        </li>
+        <li>
+            <a class="dash-nav-link" data-tab="notifications" th:classappend="${activeTab == 'notifications' ? 'active' : ''}">
+                <span class="icon">🔔</span>
+                <span>Notifications</span>
+            </a>
+        </li>
+        <li>
+            <a class="dash-nav-link" data-tab="profile" th:classappend="${activeTab == 'profile' ? 'active' : ''}">
+                <span class="icon">👤</span>
+                <span>My Profile</span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="dash-sidebar-footer">
+        <form th:action="@{/logout}" method="post" style="margin: 0;">
+            <button type="submit" class="dash-nav-link" style="width: 100%; background: transparent; border: none; text-align: left; color: #f87171;">
+                <span class="icon">🚪</span>
+                <span>Sign Out</span>
+            </button>
+        </form>
+    </div>
+</aside>
+
+<!-- ==========================================
+     Doctor Dashboard Sidebar
+     ========================================== -->
+<aside th:fragment="doctorSidebar(activeTab)" class="dash-sidebar">
+    <a th:href="@{/}" class="dash-sidebar-brand">
+        <span class="logo-icon">🩺</span>
+        <div>
+            <div class="logo-title">TN Smart Hospital</div>
+            <div class="logo-sub">Doctor Portal (Demo)</div>
+        </div>
+    </a>
+
+    <ul class="dash-sidebar-menu">
+        <li>
+            <a class="dash-nav-link" data-tab="overview" th:classappend="${activeTab == 'overview' ? 'active' : ''}">
+                <span class="icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a class="dash-nav-link" data-tab="queue" th:classappend="${activeTab == 'queue' ? 'active' : ''}">
+                <span class="icon">📋</span>
+                <span>My Appointments</span>
+            </a>
+        </li>
+        <li>
+            <a class="dash-nav-link" data-tab="today" th:classappend="${activeTab == 'today' ? 'active' : ''}">
+                <span class="icon">⏱️</span>
+                <span>Today's Schedule</span>
+            </a>
+        </li>
+        <li>
+            <a class="dash-nav-link" data-tab="slots" th:classappend="${activeTab == 'slots' ? 'active' : ''}">
+                <span class="icon">🗓️</span>
+                <span>Availability Management</span>
+            </a>
+        </li>
+        <li>
+            <a class="dash-nav-link" data-tab="profile" th:classappend="${activeTab == 'profile' ? 'active' : ''}">
+                <span class="icon">👤</span>
+                <span>My Profile</span>
+            </a>
+        </li>
+        <li>
+            <a class="dash-nav-link" data-tab="notifications" th:classappend="${activeTab == 'notifications' ? 'active' : ''}">
+                <span class="icon">🔔</span>
+                <span>Notifications</span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="dash-sidebar-footer">
+        <form th:action="@{/logout}" method="post" style="margin: 0;">
+            <button type="submit" class="dash-nav-link" style="width: 100%; background: transparent; border: none; text-align: left; color: #f87171;">
+                <span class="icon">🚪</span>
+                <span>Sign Out</span>
+            </button>
+        </form>
+    </div>
+</aside>
+
+<!-- ==========================================
+     Administrator Dashboard Sidebar
+     ========================================== -->
+<aside th:fragment="adminSidebar(activeTab)" class="dash-sidebar">
+    <a th:href="@{/}" class="dash-sidebar-brand">
+        <span class="logo-icon">🏛️</span>
+        <div>
+            <div class="logo-title">TN Smart Hospital</div>
+            <div class="logo-sub">Admin Console (Demo)</div>
+        </div>
+    </a>
+
+    <ul class="dash-sidebar-menu">
+        <li>
+            <a class="dash-nav-link" data-tab="overview" th:classappend="${activeTab == 'overview' ? 'active' : ''}">
+                <span class="icon">📊</span>
+                <span>Overview</span>
+            </a>
+        </li>
+        <li>
+            <a class="dash-nav-link" data-tab="hospitals" th:classappend="${activeTab == 'hospitals' ? 'active' : ''}">
+                <span class="icon">🏥</span>
+                <span>Manage Hospitals</span>
+            </a>
+        </li>
+        <li>
+            <a class="dash-nav-link" data-tab="doctors" th:classappend="${activeTab == 'doctors' ? 'active' : ''}">
+                <span class="icon">🩺</span>
+                <span>Manage Doctors</span>
+            </a>
+        </li>
+        <li>
+            <a class="dash-nav-link" data-tab="departments" th:classappend="${activeTab == 'departments' ? 'active' : ''}">
+                <span class="icon">🏢</span>
+                <span>Manage Departments</span>
+            </a>
+        </li>
+        <li>
+            <a class="dash-nav-link" data-tab="slots" th:classappend="${activeTab == 'slots' ? 'active' : ''}">
+                <span class="icon">🗓️</span>
+                <span>Manage Availability Slots</span>
+            </a>
+        </li>
+        <li>
+            <a class="dash-nav-link" data-tab="appointments" th:classappend="${activeTab == 'appointments' ? 'active' : ''}">
+                <span class="icon">📋</span>
+                <span>Manage Appointments</span>
+            </a>
+        </li>
+        <li>
+            <a class="dash-nav-link" data-tab="users" th:classappend="${activeTab == 'users' ? 'active' : ''}">
+                <span class="icon">👥</span>
+                <span>Manage Users</span>
+            </a>
+        </li>
+        <li>
+            <a class="dash-nav-link" data-tab="reports" th:classappend="${activeTab == 'reports' ? 'active' : ''}">
+                <span class="icon">📈</span>
+                <span>Reports</span>
+            </a>
+        </li>
+        <li>
+            <a class="dash-nav-link" data-tab="settings" th:classappend="${activeTab == 'settings' ? 'active' : ''}">
+                <span class="icon">⚙️</span>
+                <span>Settings</span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="dash-sidebar-footer">
+        <form th:action="@{/logout}" method="post" style="margin: 0;">
+            <button type="submit" class="dash-nav-link" style="width: 100%; background: transparent; border: none; text-align: left; color: #f87171;">
+                <span class="icon">🚪</span>
+                <span>Sign Out</span>
+            </button>
+        </form>
+    </div>
+</aside>
+
+</body>
+</html>
+

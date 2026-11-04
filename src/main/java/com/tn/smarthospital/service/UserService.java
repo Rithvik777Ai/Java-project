@@ -86,5 +86,9 @@ public class UserService implements UserDetailsService {
     public long getTotalUsersCount() {
         return userRepository.count();
     }
+
+    public java.util.List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 }
 

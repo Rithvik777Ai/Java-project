@@ -30,15 +30,17 @@ public class SecurityConfig {
                     "/login",
                     "/register",
                     "/demo-login",
+                    "/dashboard",
                     "/api/**",
                     "/css/**",
                     "/js/**",
                     "/images/**",
                     "/favicon.ico"
                 ).permitAll()
-                .requestMatchers("/patient/**", "/book/**", "/appointments/**").hasAnyRole("PATIENT", "ADMIN")
-                .requestMatchers("/doctor/**").hasAnyRole("DOCTOR", "ADMIN")
-                .requestMatchers("/admin/**", "/h2-console/**").hasRole("ADMIN")
+                .requestMatchers("/patient/**", "/dashboard/patient", "/book/**", "/appointments/**").hasAnyRole("PATIENT", "ADMIN")
+                .requestMatchers("/doctor/**", "/dashboard/doctor").hasAnyRole("DOCTOR", "ADMIN")
+                .requestMatchers("/admin/**", "/dashboard/admin", "/h2-console/**").hasRole("ADMIN")
+                .requestMatchers("/profile").authenticated()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

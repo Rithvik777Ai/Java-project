@@ -95,18 +95,6 @@ public class DataInitializer implements CommandLineRunner {
         ));
 
         hospitals.add(new Hospital(
-                "Sample Metro Medicare Hospital",
-                "Super Specialty",
-                "Chennai",
-                "Tambaram",
-                "Sample Address: No. 108, GST Road, Tambaram, Chennai, Tamil Nadu 600045",
-                "044-2200-0002 (Sample)",
-                "contact@samplemetromedicare.local",
-                "Cardiology, Oncology, Nephrology, Gastroenterology, Pulmonology",
-                "Fictional tertiary care medical center serving the southern suburban zone of Chennai with simulated advanced clinical departments."
-        ));
-
-        hospitals.add(new Hospital(
                 "Sample Care Centre",
                 "Specialty Hospital",
                 "Coimbatore",
@@ -119,15 +107,27 @@ public class DataInitializer implements CommandLineRunner {
         ));
 
         hospitals.add(new Hospital(
-                "Kongu Demo Health Institute",
+                "Tamil Nadu Demo Medical Institute",
+                "Super Specialty",
+                "Chennai",
+                "Tambaram",
+                "Sample Address: No. 108, GST Road, Tambaram, Chennai, Tamil Nadu 600045",
+                "044-2200-0002 (Sample)",
+                "contact@tndemomedical.local",
+                "Cardiology, Oncology, Nephrology, Gastroenterology, Pulmonology, Neurology",
+                "Fictional apex medical institute serving Chennai and surrounding districts with simulated multi-department super-specialty outpatient clinics."
+        ));
+
+        hospitals.add(new Hospital(
+                "Green Life Demo Hospital",
                 "Multi-Specialty",
-                "Coimbatore",
-                "RS Puram",
-                "Sample Address: No. 19, DB Road, RS Puram, Coimbatore, Tamil Nadu 641002",
-                "0422-220-0002 (Sample)",
-                "contact@kongudemohealth.local",
-                "Cardiology, Neurology, Urology, General Surgery, ENT",
-                "Fictional modern healthcare establishment serving western Tamil Nadu with dedicated demo outpatient facilities."
+                "Tiruchirappalli",
+                "Cantonment",
+                "Sample Address: No. 19, Birds Road, Cantonment, Tiruchirappalli, Tamil Nadu 620001",
+                "0431-220-0002 (Sample)",
+                "contact@greenlifedemo.local",
+                "Cardiology, Neurology, Urology, General Surgery, ENT, Pediatrics",
+                "Fictional modern healthcare establishment in central Tamil Nadu with dedicated green-campus demo outpatient and emergency facilities."
         ));
 
         hospitals.add(new Hospital(

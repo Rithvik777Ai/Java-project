@@ -40,41 +40,7 @@ public class DoctorPortalController {
     public String dashboard(@RequestParam(value = "date", required = false)
                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate selectedDate,
                             Model model) {
-        Optional<User> currentUserOpt = userService.getCurrentUser();
-        if (currentUserOpt.isEmpty()) {
-            return "redirect:/login";
-        }
-        User user = currentUserOpt.get();
-
-        Optional<Doctor> doctorOpt = doctorService.getDoctorByUser(user);
-        Doctor doctor;
-        if (doctorOpt.isPresent()) {
-            doctor = doctorOpt.get();
-        } else {
-            // Fallback for Admin or doctors with no direct user link
-            List<Doctor> doctors = doctorService.getAllActiveDoctors();
-            if (doctors.isEmpty()) {
-                throw new IllegalStateException("No doctor profile available.");
-            }
-            doctor = doctors.get(0);
-        }
-
-        LocalDate date = (selectedDate != null) ? selectedDate : LocalDate.now();
-        List<Appointment> allAppointments = appointmentService.getDoctorAppointments(doctor.getId());
-        List<AvailabilitySlot> todaySlots = doctorService.getAllSlotsForDoctorAndDate(doctor.getId(), date);
-
-        SlotForm slotForm = new SlotForm();
-        slotForm.setDoctorId(doctor.getId());
-        slotForm.setDate(date);
-
-        model.addAttribute("currentUser", user);
-        model.addAttribute("doctor", doctor);
-        model.addAttribute("selectedDate", date);
-        model.addAttribute("appointments", allAppointments);
-        model.addAttribute("todaySlots", todaySlots);
-        model.addAttribute("slotForm", slotForm);
-
-        return "doctor/dashboard";
+        return "redirect:/dashboard/doctor";
     }
 
     @PostMapping("/appointments/{id}/complete")

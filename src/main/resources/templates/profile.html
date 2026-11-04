@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile – Tamil Nadu Smart Hospital</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Header Fragment -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="container" style="max-width: 800px; margin: 40px auto;">
+    <!-- Global Alert Banners -->
+    <div th:replace="~{fragments/alert :: alerts}"></div>
+
+    <div class="card" style="padding: 32px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <div style="width: 64px; height: 64px; border-radius: 50%; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                    👤
+                </div>
+                <div>
+                    <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 4px;" th:text="${currentUser.fullName != null ? currentUser.fullName : currentUser.username}">
+                        Selvan Kumar
+                    </h1>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <span th:if="${currentUser.role.name() == 'ROLE_ADMIN'}" class="badge badge-teal">SYSTEM ADMINISTRATOR</span>
+                        <span th:if="${currentUser.role.name() == 'ROLE_DOCTOR'}" class="badge badge-blue">CONSULTANT DOCTOR</span>
+                        <span th:if="${currentUser.role.name() == 'ROLE_PATIENT'}" class="badge badge-green">REGISTERED PATIENT</span>
+                        <span class="badge badge-demo">Sample Account</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <a th:href="@{/dashboard}" class="btn btn-outline btn-sm">← Back to Dashboard</a>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 28px;">
+            <div style="background: var(--bg-muted); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Username</div>
+                <div style="font-weight: 700; font-size: 1.1rem; color: var(--text-main); margin-top: 4px;" th:text="${currentUser.username}">selvan</div>
+            </div>
+
+            <div style="background: var(--bg-muted); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Email Address</div>
+                <div style="font-weight: 700; font-size: 1.1rem; color: var(--text-main); margin-top: 4px;" th:text="${currentUser.email}">selvan@example.com</div>
+            </div>
+
+            <div style="background: var(--bg-muted); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Phone Number</div>
+                <div style="font-weight: 700; font-size: 1.1rem; color: var(--text-main); margin-top: 4px;" th:text="${currentUser.phone != null and !#strings.isEmpty(currentUser.phone) ? currentUser.phone : 'Not provided'}">+91 98765 43210</div>
+            </div>
+
+            <div style="background: var(--bg-muted); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Account Created</div>
+                <div style="font-weight: 700; font-size: 1.1rem; color: var(--text-main); margin-top: 4px;" th:text="${currentUser.createdAt != null ? #temporals.format(currentUser.createdAt, 'dd MMM yyyy') : 'October 2026'}">31 Oct 2026</div>
+            </div>
+        </div>
+
+        <div class="card" style="background: #f8fafc; border: 1px solid var(--border-color); padding: 20px;">
+            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Demo Prototype Notice</h3>
+            <p style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
+                Tamil Nadu Smart Hospital is an academic demonstration and software prototype. All hospital listings, doctor schedules, and appointment bookings are fictional sample data and must be verified directly with respective hospital administrations.
+            </p>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color);">
+            <a th:href="@{/dashboard}" class="btn btn-primary">Go to Dashboard</a>
+            <form th:action="@{/logout}" method="post" style="margin: 0;">
+                <button type="submit" class="btn btn-outline" style="color: #dc2626;">Sign Out</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<!-- Footer Fragment -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>
+

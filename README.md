@@ -118,47 +118,42 @@ Content-Type: application/json
 
 ---
 
-## ☁️ Deploying on Render (Free Web Service)
+## ☁️ Deploying on Render (Free Web Service via Docker)
 
-CuraTransit is fully configured for deployment on **[Render](https://render.com)**.
+> **Important:** Render does not have a native buildpack for Java/Spring Boot (it only natively supports Node, Python, Ruby, Go, Rust, and Elixir). Deploying Java on Render requires **Docker**, which Render runs natively and automatically.
 
-### Configuration Files Included:
-- **`system.properties`**: Declares `java.runtime.version=17` so Render automatically selects Java 17.
-- **`render.yaml`**: Pre-configured Render Blueprint with free web service definitions.
-- **`application.properties`**: Dynamic port binding via `server.port=${PORT:8080}`.
-- **Executable JAR**: Maven builds `target/curatransit-1.0.0.jar`.
+### Why the `yarn start / package.json not found` Error Occurs:
+If you create a Web Service on Render and it defaults to **Node**, Render attempts to execute `yarn start`, which fails with:
+`error Couldn't find a package.json file in "/opt/render/project/src"`
 
-### Option A: 1-Click Blueprint Deployment via Git
-1. Push this repository to your GitHub or GitLab account.
-2. Log in to [Render Dashboard](https://dashboard.render.com).
-3. Click **New +** > **Blueprint**.
-4. Select your repository. Render will automatically detect `render.yaml` and configure the service.
-5. Click **Apply**.
+### How to Fix & Deploy:
 
-### Option B: Manual Web Service Setup on Render
-1. Go to [Render Dashboard](https://dashboard.render.com) > **New +** > **Web Service**.
+#### Option 1: Fix Existing Service (e.g. `java-project-1`)
+1. In your [Render Dashboard](https://dashboard.render.com), open **`java-project-1`**.
+2. Click **Settings** in the left sidebar (below "Deploys").
+3. Scroll down to **Build & Deploy** (or under **Source**, click **Edit**).
+4. Change **Language / Runtime** from `Node` to **`Docker`**.
+5. Clear out any manual **Build Command** or **Start Command** (the `Dockerfile` handles this automatically).
+6. Click **Save Changes**.
+7. Go to **Deploys** and click **Manual Deploy** > **Deploy latest commit**.
+
+#### Option 2: Deploy Fresh via Blueprint (Recommended)
+1. Push this repository to GitHub/GitLab.
+2. In [Render Dashboard](https://dashboard.render.com), click **New +** > **Blueprint**.
+3. Select your repository. Render automatically reads `render.yaml` (which uses `runtime: docker`).
+4. Click **Apply**. Render will build and deploy your Spring Boot app in ~2 minutes.
+
+#### Option 3: Create New Web Service with Docker Runtime
+1. In [Render Dashboard](https://dashboard.render.com), click **New +** > **Web Service**.
 2. Connect your Git repository.
-3. Configure the following settings:
-   - **Name:** `curatransit` (or your chosen name)
-   - **Region:** Any (e.g. *Oregon, US* or *Frankfurt, EU*)
-   - **Branch:** `main`
-   - **Runtime:** `Java`
-   - **Build Command:**
-     ```bash
-     mvn clean package -DskipTests
-     ```
-   - **Start Command:**
-     ```bash
-     java -jar target/curatransit-1.0.0.jar
-     ```
+3. Configure:
+   - **Name:** `curatransit`
+   - **Runtime:** **`Docker`** *(Render will auto-detect your `Dockerfile`)*
    - **Instance Type:** `Free`
 4. In **Environment Variables**, add:
-   - `PORT`: `10000` (Render will override this automatically)
-   - `JAVA_VERSION`: `17`
-   - `TEXTBEE_ENABLED`: `false` (or `true` if you have TextBee credentials)
-   - `TEXTBEE_API_KEY`: *(Optional TextBee API Key)*
-   - `TEXTBEE_DEVICE_ID`: *(Optional TextBee Device ID)*
-5. Click **Create Web Service**. Your application will be live in 2-3 minutes at `https://<your-service-name>.onrender.com`.
+   - `PORT`: `10000` *(Render sets this automatically)*
+   - `TEXTBEE_ENABLED`: `false` *(or `true` if you have TextBee credentials)*
+5. Click **Create Web Service**. Your application will be live at `https://<service-name>.onrender.com`.
 
 ---
 

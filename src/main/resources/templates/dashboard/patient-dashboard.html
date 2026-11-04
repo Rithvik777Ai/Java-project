@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard - Tamil Nadu Smart Hospital</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div class="dashboard-layout">
+    <!-- Patient Sidebar Fragment -->
+    <div th:replace="~{fragments/sidebar :: patientSidebar('overview')}"></div>
+
+    <div class="dash-main">
+        <!-- Top Navigation Bar -->
+        <header class="dash-topbar">
+            <div class="dash-topbar-left">
+                <button type="button" class="dash-sidebar-toggle" aria-label="Toggle Navigation">☰</button>
+                <div style="font-size: 0.85rem; color: #92400e; background: #fffbeb; padding: 4px 12px; border-radius: 9999px; border: 1px solid #fef3c7; font-weight: 600;">
+                    ⚠️ Demo Patient Portal — Sample Data Only
+                </div>
+            </div>
+
+            <div class="dash-topbar-right">
+                <a th:href="@{/}" class="btn btn-outline btn-sm">🏠 Website Home</a>
+                <div class="dash-user-badge">
+                    <span>👤</span>
+                    <span th:text="${currentUser.name}">Selvan Kumar</span>
+                    <span class="role-tag" style="background: #dcfce7; color: #166534;">PATIENT</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Body -->
+        <main class="dash-content">
+            <div th:replace="~{fragments/alert :: alerts}"></div>
+
+            <!-- Tab Pane 1: Overview -->
+            <div class="tab-pane active" id="overview">
+                <!-- Welcome Banner -->
+                <div class="dash-welcome">
+                    <div class="dash-welcome-text">
+                        <h1>Welcome back, <span th:text="${currentUser.name}">Selvan</span>! 👋</h1>
+                        <p>Track your Tamil Nadu demo healthcare visits, doctor consultations, and simulated appointment references.</p>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <a th:href="@{/doctors}" class="btn btn-primary" style="background: white; color: var(--dash-primary); font-weight: 700;">+ Book New Appointment</a>
+                        <a th:href="@{/hospitals}" class="btn btn-outline" style="color: white; border-color: rgba(255,255,255,0.6);">Browse Hospitals</a>
+                    </div>
+                </div>
+
+                <!-- 4 Dashboard Metric Cards -->
+                <div class="dash-stats-grid">
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-info">
+                            <div class="stat-label">Total Appointments</div>
+                            <div class="stat-val" th:text="${totalAppointments}">0</div>
+                            <div class="stat-desc">Lifetime demo visits</div>
+                        </div>
+                        <div class="dash-stat-icon" style="background: #f1f5f9; color: var(--dash-text);">
+                            📋
+                        </div>
+                    </div>
+
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-info">
+                            <div class="stat-label">Upcoming Visits</div>
+                            <div class="stat-val" style="color: var(--dash-primary);" th:text="${upcomingCount}">0</div>
+                            <div class="stat-desc">Active confirmed slots</div>
+                        </div>
+                        <div class="dash-stat-icon" style="background: #ccfbf1; color: var(--dash-primary);">
+                            📅
+                        </div>
+                    </div>
+
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-info">
+                            <div class="stat-label">Completed Consults</div>
+                            <div class="stat-val" style="color: var(--dash-secondary);" th:text="${completedCount}">0</div>
+                            <div class="stat-desc">Finished demo visits</div>
+                        </div>
+                        <div class="dash-stat-icon" style="background: #e0f2fe; color: var(--dash-secondary);">
+                            ✓
+                        </div>
+                    </div>
+
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-info">
+                            <div class="stat-label">Cancelled Visits</div>
+                            <div class="stat-val" style="color: #dc2626;" th:text="${cancelledCount}">0</div>
+                            <div class="stat-desc">Released time slots</div>
+                        </div>
+                        <div class="dash-stat-icon" style="background: #fee2e2; color: #dc2626;">
+                            ✕
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Appointments Section -->
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <h2 class="dash-card-title">
+                            <span>📅</span>
+                            <span>Upcoming Demo Appointments</span>
+                        </h2>
+                        <span class="badge badge-confirmed"><span th:text="${upcomingCount}">0</span> Active</span>
+                    </div>
+
+                    <div th:if="${not #lists.isEmpty(upcomingAppointments)}" class="dash-table-wrap">
+                        <table class="dash-table">
+                            <thead>
+                                <tr>
+                                    <th>Booking Ref</th>
+                                    <th>Specialist Doctor</th>
+                                    <th>Hospital &amp; City</th>
+                                    <th>Date &amp; Time Slot</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="appt : ${upcomingAppointments}">
+                                    <td>
+                                        <div style="font-family: monospace; font-weight: 700; color: var(--dash-primary);" th:text="${appt.bookingReference}">TNSH-1001</div>
+                                        <button type="button" class="btn-copy-ref" th:data-ref="${appt.bookingReference}" style="background: none; border: none; color: var(--dash-secondary); font-size: 0.75rem; cursor: pointer; padding: 0;">Copy Ref</button>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: 700;" th:text="${appt.doctor.name}">Dr. K. Anitha</div>
+                                        <div style="font-size: 0.8rem; color: var(--dash-primary);" th:text="${appt.doctor.specialty}">Cardiology</div>
+                                    </td>
+                                    <td>
+                                        <div th:text="${appt.hospital.name}">Demo Hospital</div>
+                                        <div style="font-size: 0.8rem; color: var(--dash-text-muted);" th:text="${appt.hospital.city} + ', ' + ${appt.hospital.district}">Chennai</div>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: 600;" th:text="${appt.getFormattedDate()}">31 Oct 2026</div>
+                                        <div style="font-size: 0.8rem; color: var(--dash-text-muted);" th:text="${appt.getFormattedTime()}">09:00 AM</div>
+                                    </td>
+                                    <td>
+                                        <span class="badge-confirmed">CONFIRMED (DEMO)</span>
+                                    </td>
+                                    <td>
+                                        <div style="display: flex; gap: 8px;">
+                                            <a th:href="@{'/appointments/confirmation/' + ${appt.bookingReference}}" class="btn btn-outline btn-sm">View Slip</a>
+                                            <form th:action="@{'/appointments/' + ${appt.id} + '/cancel'}" method="post" class="confirm-cancel-form" style="display: inline; margin: 0;">
+                                                <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(upcomingAppointments)}" style="text-align: center; padding: 32px 16px;">
+                        <span style="font-size: 2.5rem;">📅</span>
+                        <h3 style="font-size: 1.15rem; font-weight: 700; margin: 8px 0 4px;">No upcoming demo visits scheduled</h3>
+                        <p style="color: var(--dash-text-muted); font-size: 0.875rem; margin-bottom: 16px;">Choose a doctor from any Tamil Nadu district to test appointment booking.</p>
+                        <a th:href="@{/doctors}" class="btn btn-primary btn-sm">Find Doctors &amp; Book &rarr;</a>
+                    </div>
+                </div>
+
+                <!-- Profile Summary Card -->
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <h2 class="dash-card-title">
+                            <span>👤</span>
+                            <span>Patient Profile Summary</span>
+                        </h2>
+                        <span class="badge-demo-tag">Demo Account</span>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                        <div style="background: var(--dash-bg); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--dash-border);">
+                            <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--dash-text-muted); font-weight: 600;">Full Patient Name</div>
+                            <div style="font-weight: 700; font-size: 1.05rem; margin-top: 2px;" th:text="${currentUser.name}">Selvan Kumar</div>
+                        </div>
+
+                        <div style="background: var(--dash-bg); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--dash-border);">
+                            <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--dash-text-muted); font-weight: 600;">Email Address</div>
+                            <div style="font-weight: 600; font-size: 0.95rem; margin-top: 2px;" th:text="${currentUser.email}">patient@demo.tn.gov.in</div>
+                        </div>
+
+                        <div style="background: var(--dash-bg); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--dash-border);">
+                            <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--dash-text-muted); font-weight: 600;">Phone Number</div>
+                            <div style="font-weight: 600; font-size: 0.95rem; margin-top: 2px;">+91 <span th:text="${currentUser.phone}">9876543210</span></div>
+                        </div>
+
+                        <div style="background: var(--dash-bg); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--dash-border);">
+                            <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--dash-text-muted); font-weight: 600;">State &amp; Location</div>
+                            <div style="font-weight: 700; font-size: 1rem; color: var(--dash-primary); margin-top: 2px;">Tamil Nadu, India</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Pane 2: My Appointments -->
+            <div class="tab-pane" id="appointments">
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <h2 class="dash-card-title">
+                            <span>📋</span>
+                            <span>Complete Appointment &amp; Booking History</span>
+                        </h2>
+                        <a th:href="@{/doctors}" class="btn btn-primary btn-sm">+ New Demo Visit</a>
+                    </div>
+
+                    <div th:if="${not #lists.isEmpty(allAppointments)}" class="dash-table-wrap">
+                        <table class="dash-table">
+                            <thead>
+                                <tr>
+                                    <th>Booking Ref</th>
+                                    <th>Doctor</th>
+                                    <th>Hospital</th>
+                                    <th>Date &amp; Time</th>
+                                    <th>Reason / Notes</th>
+                                    <th>Status</th>
+                                    <th>Slip</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="appt : ${allAppointments}">
+                                    <td style="font-family: monospace; font-weight: 700;" th:text="${appt.bookingReference}">TNSH-1001</td>
+                                    <td>
+                                        <div style="font-weight: 600;" th:text="${appt.doctor.name}">Doctor Name</div>
+                                        <div style="font-size: 0.8rem; color: var(--dash-primary);" th:text="${appt.doctor.specialty}">Specialty</div>
+                                    </td>
+                                    <td>
+                                        <div th:text="${appt.hospital.name}">Hospital</div>
+                                        <div style="font-size: 0.8rem; color: var(--dash-text-muted);" th:text="${appt.hospital.city}">City</div>
+                                    </td>
+                                    <td>
+                                        <span th:text="${appt.getFormattedDate()}">Date</span>,
+                                        <span style="font-size: 0.8rem; color: var(--dash-text-muted);" th:text="${appt.getFormattedTime()}">Time</span>
+                                    </td>
+                                    <td style="font-size: 0.85rem; color: var(--dash-text-muted);" th:text="${appt.reason != null ? appt.reason : 'General Consultation'}">Reason</td>
+                                    <td>
+                                        <span th:if="${appt.status.name() == 'CONFIRMED'}" class="badge-confirmed">CONFIRMED</span>
+                                        <span th:if="${appt.status.name() == 'COMPLETED'}" class="badge-completed">COMPLETED</span>
+                                        <span th:if="${appt.status.name() == 'CANCELLED'}" class="badge-cancelled">CANCELLED</span>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{'/appointments/confirmation/' + ${appt.bookingReference}}" class="btn btn-outline btn-sm">View Slip</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(allAppointments)}" style="text-align: center; padding: 32px 16px;">
+                        <p style="color: var(--dash-text-muted);">No booking history recorded yet.</p>
+                        <a th:href="@{/doctors}" class="btn btn-primary btn-sm">Book an Appointment Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Pane 3: Medical Records -->
+            <div class="tab-pane" id="records">
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <h2 class="dash-card-title">
+                            <span>📁</span>
+                            <span>Patient Medical Records Section</span>
+                        </h2>
+                        <span class="badge-demo-tag">Privacy Notice</span>
+                    </div>
+
+                    <div style="background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: var(--dash-radius); padding: 48px 24px; text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 12px;">🛡️</div>
+                        <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--dash-text); margin-bottom: 8px;">
+                            No records available in this demo
+                        </h3>
+                        <p style="color: var(--dash-text-muted); max-width: 600px; margin: 0 auto 16px; font-size: 0.95rem; line-height: 1.6;">
+                            In accordance with patient healthcare privacy standards and demo safety guidelines, clinical diagnoses, lab test results, prescriptions, and electronic medical histories are neither collected nor stored on this demonstration prototype platform.
+                        </p>
+                        <div style="display: inline-block; background: #fffbeb; border: 1px solid #fef3c7; color: #92400e; padding: 10px 18px; border-radius: 8px; font-size: 0.85rem; font-weight: 600;">
+                            ⚠️ Official records must be accessed directly through authorized Tamil Nadu medical institution portals.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Pane 4: Notifications -->
+            <div class="tab-pane" id="notifications">
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <h2 class="dash-card-title">
+                            <span>🔔</span>
+                            <span>System &amp; Appointment Notifications</span>
+                        </h2>
+                        <form th:action="@{/patient/notifications/mark-read}" method="post" style="margin: 0;">
+                            <button type="submit" class="btn btn-outline btn-sm">Mark All as Read</button>
+                        </form>
+                    </div>
+
+                    <div th:if="${not #lists.isEmpty(notifications)}">
+                        <div th:each="n : ${notifications}" class="noti-item" th:classappend="${!n.read ? 'unread' : ''}">
+                            <span style="font-size: 1.25rem;">📢</span>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; font-size: 0.95rem; color: var(--dash-text);" th:text="${n.message}">Notification message</div>
+                                <div style="font-size: 0.78rem; color: var(--dash-text-muted); margin-top: 4px;" th:text="${#temporals.format(n.createdAt, 'dd MMM yyyy, hh:mm a')}">Timestamp</div>
+                            </div>
+                            <span th:if="${!n.read}" class="badge-confirmed" style="font-size: 0.65rem;">NEW</span>
+                        </div>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(notifications)}" style="text-align: center; padding: 32px 16px; color: var(--dash-text-muted);">
+                        No demo notifications at this time.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Pane 5: Account Profile Settings -->
+            <div class="tab-pane" id="profile">
+                <div class="dash-card" style="max-width: 700px;">
+                    <div class="dash-card-header">
+                        <h2 class="dash-card-title">
+                            <span>⚙️</span>
+                            <span>Account Details &amp; Settings</span>
+                        </h2>
+                        <span class="badge-demo-tag">Demo Profile</span>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" th:value="${currentUser.name}" readonly style="background: var(--dash-bg);">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email Address (Login Username)</label>
+                            <input type="text" class="form-control" th:value="${currentUser.email}" readonly style="background: var(--dash-bg);">
+                            <small class="form-text">Primary identifier for demo login credentials.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Registered Mobile Number</label>
+                            <input type="text" class="form-control" th:value="${currentUser.phone}" readonly style="background: var(--dash-bg);">
+                            <small class="form-text">Receives simulated SMS notifications via TextBee gateway.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Account Role</label>
+                            <input type="text" class="form-control" value="ROLE_PATIENT" readonly style="background: var(--dash-bg);">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>
+

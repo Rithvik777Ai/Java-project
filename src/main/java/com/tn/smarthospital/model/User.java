@@ -68,6 +68,14 @@ public class User {
         this.name = name;
     }
 
+    public String getFullName() {
+        return name;
+    }
+
+    public String getUsername() {
+        return email != null ? email : name;
+    }
+
     public String getEmail() {
         return email;
     }

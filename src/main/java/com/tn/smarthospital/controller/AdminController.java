@@ -54,29 +54,7 @@ public class AdminController {
                             @RequestParam(value = "doctorId", required = false) Long doctorId,
                             @RequestParam(value = "status", required = false) AppointmentStatus status,
                             Model model) {
-        List<Appointment> filteredAppointments = appointmentService.getAllAppointmentsAdmin(date, hospitalId, doctorId, status);
-        List<Hospital> allHospitals = hospitalService.getAllHospitals();
-        List<Doctor> allDoctors = doctorService.getAllDoctors();
-
-        model.addAttribute("appointments", filteredAppointments);
-        model.addAttribute("hospitals", allHospitals);
-        model.addAttribute("doctors", allDoctors);
-        model.addAttribute("selectedDate", date);
-        model.addAttribute("selectedHospitalId", hospitalId);
-        model.addAttribute("selectedDoctorId", doctorId);
-        model.addAttribute("selectedStatus", status);
-
-        // Stats
-        model.addAttribute("totalHospitals", hospitalService.getTotalHospitalsCount());
-        model.addAttribute("totalDoctors", doctorService.getTotalDoctorsCount());
-        model.addAttribute("totalUsers", userService.getTotalUsersCount());
-        model.addAttribute("stats", appointmentService.getSystemStatistics());
-        model.addAttribute("smsService", textBeeSmsService);
-
-        Optional<User> currentUser = userService.getCurrentUser();
-        currentUser.ifPresent(user -> model.addAttribute("currentUser", user));
-
-        return "admin/dashboard";
+        return "redirect:/dashboard/admin";
     }
 
     // Hospital Management

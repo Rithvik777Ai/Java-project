@@ -37,37 +37,7 @@ public class PatientController {
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
-        Optional<User> currentUserOpt = userService.getCurrentUser();
-        if (currentUserOpt.isEmpty()) {
-            return "redirect:/login";
-        }
-        User user = currentUserOpt.get();
-
-        List<Appointment> allAppointments = appointmentService.getPatientAppointments(user.getId());
-
-        List<Appointment> upcomingAppointments = new ArrayList<>();
-        List<Appointment> pastAndCancelledAppointments = new ArrayList<>();
-        LocalDate today = LocalDate.now();
-
-        for (Appointment appt : allAppointments) {
-            if (appt.getStatus() == AppointmentStatus.CONFIRMED && !appt.getDate().isBefore(today)) {
-                upcomingAppointments.add(appt);
-            } else {
-                pastAndCancelledAppointments.add(appt);
-            }
-        }
-
-        List<Notification> notifications = notificationService.getUserNotifications(user.getId());
-        long unreadNotifications = notificationService.getUnreadCount(user.getId());
-
-        model.addAttribute("currentUser", user);
-        model.addAttribute("upcomingAppointments", upcomingAppointments);
-        model.addAttribute("pastAppointments", pastAndCancelledAppointments);
-        model.addAttribute("notifications", notifications);
-        model.addAttribute("unreadCount", unreadNotifications);
-        model.addAttribute("totalBookings", allAppointments.size());
-
-        return "patient/dashboard";
+        return "redirect:/dashboard/patient";
     }
 
     @PostMapping("/notifications/mark-read")

@@ -63,18 +63,7 @@ public class HomeController {
 
     @GetMapping("/dashboard-redirect")
     public String dashboardRedirect() {
-        Optional<User> currentUser = userService.getCurrentUser();
-        if (currentUser.isPresent()) {
-            User user = currentUser.get();
-            if (user.getRole() == Role.ROLE_ADMIN) {
-                return "redirect:/admin/dashboard";
-            } else if (user.getRole() == Role.ROLE_DOCTOR) {
-                return "redirect:/doctor/dashboard";
-            } else {
-                return "redirect:/patient/dashboard";
-            }
-        }
-        return "redirect:/login";
+        return "redirect:/dashboard";
     }
 }
 
